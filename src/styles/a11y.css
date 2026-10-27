@@ -1,0 +1,74 @@
+/* =====================================================================
+ * Accessibility modes – toggled as classes on <html> by src/client/a11y.js
+ * (colour modes swap the CSS variables in tailwind.config.cjs)
+ * ===================================================================== */
+
+/* Skip link: hidden until focused */
+.skip-link {
+  position: fixed; top: 0.5rem; right: 0.5rem; z-index: 200;
+  transform: translateY(-200%);
+  background: rgb(var(--c-primary)); color: rgb(var(--c-on-primary));
+  padding: 0.75rem 1.25rem; border-radius: 9999px; font-weight: 700;
+}
+.skip-link:focus { transform: none; }
+
+/* Side tab that opens the panel: label shows on hover/focus on large screens */
+.a11y-tab-label { display: none; }
+@media (min-width: 1024px) {
+  .a11y-tab:hover .a11y-tab-label, .a11y-tab:focus-visible .a11y-tab-label { display: inline; }
+}
+
+/* Grayscale – on the root so fixed elements keep working */
+html.a11y-gray { filter: grayscale(100%); }
+
+/* Highlight links and headings */
+html.a11y-links a { text-decoration: underline !important; text-underline-offset: 3px; outline: 2px dashed rgb(var(--c-primary)); outline-offset: 2px; }
+html.a11y-headings :is(h1, h2, h3, h4) { outline: 3px solid rgb(var(--c-secondary)); outline-offset: 4px; border-radius: 4px; }
+
+/* Readable font */
+html.a11y-readable body, html.a11y-readable :is(button, input, textarea, select) { font-family: Arial, Helvetica, sans-serif !important; }
+
+/* Text spacing (WCAG 1.4.12 values) */
+html.a11y-spacing body { letter-spacing: 0.12em !important; word-spacing: 0.16em !important; }
+html.a11y-spacing :is(p, li, dd, dt, blockquote, label) { line-height: 1.8 !important; }
+html.a11y-spacing p { margin-bottom: 1em; }
+
+/* Big cursor */
+html.a11y-cursor, html.a11y-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M6 4l32 18-14 3 8 15-6 3-8-15-12 9z' fill='%23000' stroke='%23fff' stroke-width='2.5' stroke-linejoin='round'/%3E%3C/svg%3E") 6 4, auto !important;
+}
+
+/* Reading guide */
+.reading-guide {
+  position: fixed; inset-inline: 0; top: 0; height: 36px; z-index: 150; pointer-events: none;
+  background: rgb(255 214 0 / 0.18); border-block: 3px solid rgb(var(--c-on-surface));
+}
+
+/* Strong focus */
+html.a11y-focus :focus-visible, html.a11y-focus :focus {
+  outline: 4px solid #ffbf00 !important; outline-offset: 3px !important;
+  box-shadow: 0 0 0 7px #000 !important;
+}
+
+/* Stop motion */
+html.a11y-nomotion *, html.a11y-nomotion *::before, html.a11y-nomotion *::after {
+  animation: none !important; transition: none !important; scroll-behavior: auto !important;
+}
+
+/* Hide decorative pictures (the logo stays) */
+html.a11y-noimages .art, html.a11y-noimages .product-card img, html.a11y-noimages main .blur-3xl, html.a11y-noimages main .blur-2xl { visibility: hidden; }
+
+/* High contrast & dark contrast: flatten gradients, keep borders visible */
+html.a11y-contrast :is(.bg-gradient-to-br, .bg-gradient-to-r, .bg-gradient-to-b),
+html.a11y-dark :is(.bg-gradient-to-br, .bg-gradient-to-r, .bg-gradient-to-b) { background-image: none !important; }
+html.a11y-dark .bg-gradient-to-r { background-color: rgb(var(--c-primary)); }
+html.a11y-contrast main :is(article, section > div, li) { border-color: rgb(var(--c-on-surface)); }
+html.a11y-dark body { color-scheme: dark; }
+
+/* Respect the operating-system setting too */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+@media (forced-colors: active) {
+  .btn-pop, .chip, [data-act] { border: 1px solid ButtonText; }
+}

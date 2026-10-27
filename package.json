@@ -1,0 +1,22 @@
+{
+  "name": "cheatday-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CheatDay – אתר ואפליקציית ווב לסינבונים וקינוחים ביתיים",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "build:preview": "node scripts/build.mjs --preview",
+    "serve": "node scripts/serve.mjs",
+    "audit:a11y": "node scripts/a11y-audit.mjs",
+    "brand": "python3 scripts/make-brand-assets.py && node scripts/make-og-image.mjs"
+  },
+  "devDependencies": {
+    "axe-core": "4.10.2",
+    "esbuild": "0.24.2",
+    "tailwindcss": "3.4.17"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
