@@ -15,6 +15,12 @@ export function toast(message, icon = 'check_circle') {
   toastTimer = setTimeout(() => el.classList.add('opacity-0'), 3200);
 }
 
+/** Hide the toast at once (when a drawer or dialog opens over it) */
+export function hideToast() {
+  clearTimeout(toastTimer);
+  $('[data-toast]')?.classList.add('opacity-0');
+}
+
 /** Urgent message for screen readers only (form errors) */
 export function announce(message) {
   const el = $('[data-alert]');

@@ -1,29 +1,33 @@
 /** Accessibility panel content. The state lives in client/a11y.js */
 import { ic, each } from '../lib/html.js';
+import { tr } from '../lib/i18n.js';
 import { href } from '../lib/paths.js';
 
 /** Text size steps (percent of the default) */
 export const TEXT_STEPS = [100, 115, 130, 150, 175, 200];
 
 /** Toggle options: key, icon, label, short explanation */
-export const A11Y_TOGGLES = [
-  ['contrast', 'contrast', 'ניגודיות גבוהה', 'טקסט כהה יותר על רקע לבן'],
-  ['dark', 'dark_mode', 'ניגודיות כהה', 'טקסט בהיר על רקע כהה'],
-  ['gray', 'filter_b_and_w', 'גווני אפור', 'ביטול צבעים'],
-  ['links', 'link', 'הדגשת קישורים', 'קו תחתון ומסגרת לכל קישור'],
-  ['headings', 'title', 'הדגשת כותרות', 'מסגרת סביב כותרות'],
-  ['readable', 'font_download', 'גופן קריא', 'גופן פשוט וברור'],
-  ['spacing', 'format_line_spacing', 'ריווח טקסט', 'רווח גדול בין שורות ואותיות'],
-  ['cursor', 'arrow_selector_tool', 'סמן גדול', 'סמן עכבר מוגדל'],
-  ['guide', 'horizontal_rule', 'סרגל קריאה', 'פס שעוקב אחרי העכבר'],
-  ['focus', 'center_focus_strong', 'הדגשת מיקוד', 'מסגרת עבה סביב הרכיב הנבחר'],
-  ['nomotion', 'motion_photos_off', 'עצירת אנימציות', 'בלי תנועה ומעברים'],
-  ['noimages', 'hide_image', 'הסתרת איורים', 'הסתרת תמונות ואיורים דקורטיביים'],
+export const a11yToggles = () => [
+  ['contrast', 'contrast', tr('ניגודיות גבוהה', 'High contrast'), tr('טקסט כהה יותר על רקע לבן', 'Darker text on white')],
+  ['dark', 'dark_mode', tr('ניגודיות כהה', 'Dark contrast'), tr('טקסט בהיר על רקע כהה', 'Light text on dark')],
+  ['gray', 'filter_b_and_w', tr('גווני אפור', 'Grayscale'), tr('ביטול צבעים', 'Remove colours')],
+  ['links', 'link', tr('הדגשת קישורים', 'Highlight links'), tr('קו תחתון ומסגרת לכל קישור', 'Underline and outline links')],
+  ['headings', 'title', tr('הדגשת כותרות', 'Highlight headings'), tr('מסגרת סביב כותרות', 'Outline every heading')],
+  ['readable', 'font_download', tr('גופן קריא', 'Readable font'), tr('גופן פשוט וברור', 'A plain, clear typeface')],
+  ['spacing', 'format_line_spacing', tr('ריווח טקסט', 'Text spacing'), tr('רווח גדול בין שורות ואותיות', 'More space between lines and letters')],
+  ['cursor', 'arrow_selector_tool', tr('סמן גדול', 'Big cursor'), tr('סמן עכבר מוגדל', 'A larger mouse pointer')],
+  ['guide', 'horizontal_rule', tr('סרגל קריאה', 'Reading guide'), tr('פס שעוקב אחרי העכבר', 'A bar that follows the pointer')],
+  ['focus', 'center_focus_strong', tr('הדגשת מיקוד', 'Strong focus'), tr('מסגרת עבה סביב הרכיב הנבחר', 'Thick outline on the focused item')],
+  ['nomotion', 'motion_photos_off', tr('עצירת אנימציות', 'Stop animations'), tr('בלי תנועה ומעברים', 'No motion or transitions')],
+  ['noimages', 'hide_image', tr('הסתרת איורים', 'Hide images'), tr('הסתרת תמונות ואיורים דקורטיביים', 'Hide decorative pictures')],
 ];
+
+/** All toggle keys (language-independent) */
+export const A11Y_KEYS = ['contrast', 'dark', 'gray', 'links', 'headings', 'readable', 'spacing', 'cursor', 'guide', 'focus', 'nomotion', 'noimages'];
 
 const toggle = ([key, icon, label, hint], on) => `
   <button type="button" data-act="a11y-set" data-k="${key}" aria-pressed="${on}"
-    class="a11y-opt min-h-[3.5rem] p-space-sm rounded-2xl flex items-center gap-space-sm text-right transition-colors border-2 ${on ? 'bg-secondary text-on-secondary border-secondary' : 'bg-surface-container text-on-surface border-transparent hover:border-secondary'}">
+    class="a11y-opt min-h-[3.5rem] p-space-sm rounded-2xl flex items-center gap-space-sm text-start transition-colors border-2 ${on ? 'bg-secondary text-on-secondary border-secondary' : 'bg-surface-container text-on-surface border-transparent hover:border-secondary'}">
     ${ic(icon, '!text-[1.5rem]')}
     <span class="flex flex-col"><span class="text-label-md">${label}</span><span class="text-label-sm opacity-90 font-normal">${hint}</span></span>
     ${on ? ic('check_circle', 'fill ms-auto !text-[1.25rem]') : ''}
@@ -33,23 +37,23 @@ export function a11yPanel(prefs) {
   const step = TEXT_STEPS.indexOf(prefs.scale);
   return `
   <div class="flex items-center justify-between gap-space-sm mb-space-md">
-    <h2 id="a11y-title" class="flex items-center gap-space-xs text-secondary text-headline-sm">${ic('accessibility_new', '!text-[1.5rem]')}התאמות נגישות</h2>
-    <button type="button" data-act="a11y" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center" aria-label="סגירת תפריט הנגישות">${ic('close')}</button>
+    <h2 id="a11y-title" class="flex items-center gap-space-xs text-secondary text-headline-sm">${ic('accessibility_new', '!text-[1.5rem]')}${tr('התאמות נגישות', 'Accessibility settings')}</h2>
+    <button type="button" data-act="a11y" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center" aria-label="${tr('סגירת תפריט הנגישות', 'Close the accessibility menu')}">${ic('close')}</button>
   </div>
   <div class="flex flex-col gap-space-md">
     <div class="flex flex-col gap-space-xs" role="group" aria-labelledby="a11y-size-label">
-      <span id="a11y-size-label" class="text-label-md">גודל טקסט: <span class="tabular-nums">${prefs.scale}%</span></span>
+      <span id="a11y-size-label" class="text-label-md">${tr('גודל טקסט', 'Text size')}: <span class="tabular-nums">${prefs.scale}%</span></span>
       <div class="grid grid-cols-3 gap-space-xs">
-        <button type="button" data-act="a11y-set" data-k="minus" ${step <= 0 ? 'disabled aria-disabled="true"' : ''} class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-lg flex items-center justify-center gap-1 disabled:opacity-50" aria-label="הקטנת טקסט">${ic('text_decrease')}<span aria-hidden="true">א-</span></button>
-        <button type="button" data-act="a11y-set" data-k="size-reset" class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-md" aria-label="גודל טקסט רגיל">רגיל</button>
-        <button type="button" data-act="a11y-set" data-k="plus" ${step >= TEXT_STEPS.length - 1 ? 'disabled aria-disabled="true"' : ''} class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-lg flex items-center justify-center gap-1 disabled:opacity-50" aria-label="הגדלת טקסט">${ic('text_increase')}<span aria-hidden="true">א+</span></button>
+        <button type="button" data-act="a11y-set" data-k="minus" ${step <= 0 ? 'disabled aria-disabled="true"' : ''} class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-lg flex items-center justify-center gap-1 disabled:opacity-50" aria-label="${tr('הקטנת טקסט', 'Smaller text')}">${ic('text_decrease')}<span aria-hidden="true">${tr('א-', 'A-')}</span></button>
+        <button type="button" data-act="a11y-set" data-k="size-reset" class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-md" aria-label="${tr('גודל טקסט רגיל', 'Normal text size')}">${tr('רגיל', 'Normal')}</button>
+        <button type="button" data-act="a11y-set" data-k="plus" ${step >= TEXT_STEPS.length - 1 ? 'disabled aria-disabled="true"' : ''} class="min-h-[3rem] rounded-2xl bg-surface-container text-on-surface text-label-lg flex items-center justify-center gap-1 disabled:opacity-50" aria-label="${tr('הגדלת טקסט', 'Larger text')}">${ic('text_increase')}<span aria-hidden="true">${tr('א+', 'A+')}</span></button>
       </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-xs">${each(A11Y_TOGGLES, (t) => toggle(t, Boolean(prefs[t[0]])))}</div>
-    <button type="button" data-act="a11y-set" data-k="reset" class="min-h-[3rem] rounded-2xl bg-surface-variant text-on-surface text-label-md flex items-center justify-center gap-space-xs">${ic('restart_alt')}איפוס כל ההגדרות</button>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-xs">${each(a11yToggles(), (t) => toggle(t, Boolean(prefs[t[0]])))}</div>
+    <button type="button" data-act="a11y-set" data-k="reset" class="min-h-[3rem] rounded-2xl bg-surface-variant text-on-surface text-label-md flex items-center justify-center gap-space-xs">${ic('restart_alt')}${tr('איפוס כל ההגדרות', 'Reset all settings')}</button>
     <div class="text-body-sm text-on-surface-variant flex flex-col gap-space-xs border-t border-surface-container pt-space-sm">
-      <p>ניווט במקלדת: Tab ו-Shift+Tab לתנועה, Enter לבחירה, Esc לסגירת חלונות. Alt+A פותח את התפריט הזה.</p>
-      <p class="flex flex-wrap items-center justify-between gap-space-sm"><a class="text-primary underline" href="${href('accessibility')}">להצהרת הנגישות המלאה</a><span class="text-secondary text-label-sm">ת״י 5568 ברמה AA</span></p>
+      <p>${tr('ניווט במקלדת: Tab ו-Shift+Tab לתנועה, Enter לבחירה, Esc לסגירת חלונות. Alt+A פותח את התפריט הזה.', 'Keyboard: Tab and Shift+Tab to move, Enter to select, Esc to close windows. Alt+A opens this menu.')}</p>
+      <p class="flex flex-wrap items-center justify-between gap-space-sm"><a class="text-primary underline" href="${href('accessibility')}">${tr('להצהרת הנגישות המלאה', 'Full accessibility statement')}</a><span class="text-secondary text-label-sm">${tr('ת״י 5568 ברמה AA', 'IS 5568, level AA')}</span></p>
     </div>
   </div>`;
 }

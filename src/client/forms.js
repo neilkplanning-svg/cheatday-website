@@ -1,6 +1,7 @@
 /** Club sign-up, coupon code and the contact form */
 import { BUSINESS, CLUB } from '../data/index.js';
 import { waLink } from '../lib/links.js';
+import { tr } from '../lib/i18n.js';
 import { store, KEYS } from '../lib/storage.js';
 import { setPromo } from './state.js';
 import { renderCart } from './cart.js';
@@ -13,8 +14,8 @@ export function submitClub(form) {
   const phone = form.phone.value.trim();
   const err = form.querySelector('[data-form-error]');
   let msg = '';
-  if (!validPhone(phone)) msg = 'נא להזין מספר נייד תקין, למשל 050-1234567';
-  else if (!form.consent.checked) msg = 'כדי להצטרף צריך לאשר קבלת עדכונים';
+  if (!validPhone(phone)) msg = tr('נא להזין מספר נייד תקין, למשל 050-1234567', 'Please enter a valid Israeli mobile number, e.g. 050-1234567');
+  else if (!form.consent.checked) msg = tr('כדי להצטרף צריך לאשר קבלת עדכונים', 'To join, please agree to receive updates');
   err.textContent = msg;
   if (msg) {
     (validPhone(phone) ? form.consent : form.phone).focus();
@@ -33,18 +34,18 @@ export function submitClub(form) {
 
 export function submitPromo(form) {
   const code = form.code.value.trim().toUpperCase();
-  if (CLUB.enabled && code === CLUB.code) { setPromo(code); renderCart(); toast(`הקוד הופעל: ${CLUB.percent}% הנחה`, 'sell'); }
-  else { toast('הקוד לא מוכר', 'error'); announce('קוד הקופון לא מוכר'); form.code.focus(); }
+  if (CLUB.enabled && code === CLUB.code) { setPromo(code); renderCart(); toast(tr(`הקוד הופעל: ${CLUB.percent}% הנחה`, `Code applied: ${CLUB.percent}% off`), 'sell'); }
+  else { toast(tr('הקוד לא מוכר', 'Unknown code'), 'error'); announce(tr('קוד הקופון לא מוכר', 'The coupon code is not recognised')); form.code.focus(); }
 }
 
 export function submitContact(form) {
   const f = Object.fromEntries(new FormData(form).entries());
   const errors = {};
-  if (!f.name.trim()) errors['c-name'] = 'נא למלא שם מלא';
-  if (!validPhone(f.phone)) errors['c-phone'] = 'מספר הטלפון לא תקין. למשל: 050-1234567';
-  if (!f.message.trim()) errors['c-msg'] = 'נא לכתוב את תוכן ההודעה';
+  if (!f.name.trim()) errors['c-name'] = tr('נא למלא שם מלא', 'Please enter your full name');
+  if (!validPhone(f.phone)) errors['c-phone'] = tr('מספר הטלפון לא תקין. למשל: 050-1234567', 'The phone number is not valid. For example: 050-1234567');
+  if (!f.message.trim()) errors['c-msg'] = tr('נא לכתוב את תוכן ההודעה', 'Please write your message');
   if (!showErrors(form, errors)) return;
-  const text = `היי ${BUSINESS.name}! פנייה מהאתר – ${f.topic}\n👤 ${f.name}\n📞 ${f.phone}\n\n${f.message}`;
+  const text = tr(`היי ${BUSINESS.name}! פנייה מהאתר – ${f.topic}`, `Hi ${BUSINESS.name}! Message from the website – ${f.topic}`) + `\n👤 ${f.name}\n📞 ${f.phone}\n\n${f.message}`;
   const box = $('[data-contact-ready]');
   box.querySelector('a').href = waLink(text);
   box.hidden = false;

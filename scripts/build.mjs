@@ -1,7 +1,8 @@
 /**
  * CheatDay build – `npm run build`
  *
- *   dist/          the website: one static HTML file per page, ready for GitHub Pages or any host
+ *   dist/          the website: one static HTML file per page and language, ready for GitHub Pages or any host
+ *                  (Hebrew at the root, English under dist/en/ with the same file names)
  *   dist-preview/  (with --preview) the same pages for the claude.ai preview
  *
  * Steps: CSS (Tailwind) → JS bundle (esbuild) → pre-render pages → SEO files → PWA files → static assets
@@ -14,7 +15,8 @@ import * as esbuild from 'esbuild';
 
 import { SITE, BUSINESS } from '../src/data/index.js';
 import { PAGES } from '../src/pages/index.js';
-import { PAGE_FILES, setHomeHref } from '../src/lib/paths.js';
+import { PAGE_FILES, setPreview } from '../src/lib/paths.js';
+import { LANGS, setLang } from '../src/lib/i18n.js';
 import { documentHtml, previewContent } from '../src/layout.js';
 import { sitemapXml, robotsTxt, manifest } from './lib/seo-files.mjs';
 
@@ -57,36 +59,49 @@ function iconNames() {
 }
 const opts = { iconNames: iconNames(), version };
 
-/* 5. Pages */
+/* 5. Pages, once per language */
 const basePath = new URL(SITE.siteUrl).pathname; // "/cheatday-website/" or "/" with a custom domain
-setHomeHref('./');
-for (const page of PAGES) {
-  write(at('dist', PAGE_FILES[page.id]), documentHtml(page, { ...opts, base: page.id === 'notFound' ? basePath : '' }));
+const langsOf = (page) => page.langs || LANGS;
+const folder = (lang) => (lang === 'he' ? '' : lang);
+let pageCount = 0;
+for (const lang of LANGS) {
+  setLang(lang);
+  for (const page of PAGES.filter((p) => langsOf(p).includes(lang))) {
+    write(at('dist', folder(lang), PAGE_FILES[page.id]), documentHtml(page, { ...opts, base: page.id === 'notFound' ? basePath : '' }));
+    pageCount++;
+  }
 }
+setLang('he');
 
 /* 6. SEO + hosting files */
-write(at('dist/sitemap.xml'), sitemapXml(SITE, PAGES, today));
+write(at('dist/sitemap.xml'), sitemapXml(SITE, PAGES.filter((p) => !p.noindex), LANGS, today));
 write(at('dist/robots.txt'), robotsTxt(SITE));
 write(at('dist/.nojekyll'), '');
 if (SITE.domain) write(at('dist/CNAME'), `${SITE.domain}\n`);
 
 /* 7. PWA */
-write(at('dist/manifest.webmanifest'), manifest(BUSINESS, SITE));
+for (const lang of LANGS) { setLang(lang); write(at('dist', folder(lang), 'manifest.webmanifest'), manifest(BUSINESS, SITE)); }
+setLang('he');
 write(at('dist/sw.js'), fs.readFileSync(at('src/sw.js'), 'utf8').replace('__BUILD__', version));
 
 /* 8. Static files (logo, icons, images) */
 copyDir(at('public'), at('dist'));
 
-/* 9. Optional claude.ai preview (main page without <html>/<head>, other pages complete) */
+/* 9. Optional claude.ai preview (Hebrew home page without <html>/<head>, every other page complete) */
 if (withPreview) {
-  setHomeHref('index.html');
-  for (const page of PAGES.filter((p) => p.id !== 'notFound')) {
-    const file = page.id === 'home' ? '_index.html' : PAGE_FILES[page.id];
-    write(at('dist-preview', file), page.id === 'home' ? previewContent(page, opts) : documentHtml(page, opts));
+  setPreview(true);
+  for (const lang of LANGS) {
+    setLang(lang);
+    for (const page of PAGES.filter((p) => p.id !== 'notFound')) {
+      const main = lang === 'he' && page.id === 'home';
+      const file = main ? '_index.html' : PAGE_FILES[page.id];
+      write(at('dist-preview', folder(lang), file), main ? previewContent(page, opts) : documentHtml(page, opts));
+    }
   }
+  setLang('he');
+  setPreview(false);
   copyDir(at('dist/assets'), at('dist-preview/assets'));
   copyDir(at('dist/icons'), at('dist-preview/icons'));
-  setHomeHref('./');
 }
 
-console.log(`✓ built ${PAGES.length} pages into dist/${withPreview ? ' (+ dist-preview/)' : ''} · ${opts.iconNames.size} icon names · ${SITE.draft ? 'DRAFT (noindex)' : 'indexable'}`);
+console.log(`✓ built ${pageCount} pages (${LANGS.join(' + ')}) into dist/${withPreview ? ' (+ dist-preview/)' : ''} · ${opts.iconNames.size} icon names · ${SITE.draft ? 'DRAFT (noindex)' : 'indexable'}`);

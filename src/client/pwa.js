@@ -1,5 +1,7 @@
 /** Installable web app: service worker + "install the app" buttons */
 import { $$, toast } from './dom.js';
+import { tr } from '../lib/i18n.js';
+import { rootPrefix } from '../lib/paths.js';
 
 let installEvent = null;
 
@@ -7,7 +9,7 @@ const isFramed = () => { try { return window.self !== window.top; } catch (e) { 
 
 export function initPwa() {
   if ('serviceWorker' in navigator && location.protocol === 'https:' && !isFramed()) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register(`${rootPrefix()}sw.js`).catch(() => {});
   }
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
@@ -20,5 +22,5 @@ export function initPwa() {
 
 export function install() {
   if (installEvent) { installEvent.prompt(); installEvent = null; return; }
-  toast('באייפון: כפתור השיתוף ← ״הוספה למסך הבית״', 'ios_share');
+  toast(tr('באייפון: כפתור השיתוף ← ״הוספה למסך הבית״', 'On iPhone: Share → “Add to Home Screen”'), 'ios_share');
 }

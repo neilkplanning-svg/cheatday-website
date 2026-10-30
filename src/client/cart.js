@@ -1,6 +1,7 @@
 /** Cart UI: panels, badges, mobile bar, add-to-cart feedback and the menu filter */
 import { findItem, PRODUCTS, CATEGORIES } from '../data/index.js';
 import { nis } from '../lib/format.js';
+import { tr, loc } from '../lib/i18n.js';
 import { cartPanel } from '../components/cart-panel.js';
 import { filterPills } from '../components/ui.js';
 import { state, totals, addItem, setQty, clearCart, setMode, setPromo } from './state.js';
@@ -22,7 +23,7 @@ export function renderCart() {
   });
   $$('[data-cart-count]').forEach((el) => { el.textContent = t.count; el.hidden = !t.count; });
   $$('[data-cart-total]').forEach((el) => { el.textContent = nis(t.total); });
-  $$('.site-header [data-act="cart"]').forEach((b) => b.setAttribute('aria-label', t.count ? `סל קניות, ${t.count} פריטים, ${nis(t.total)}` : 'סל קניות ריק'));
+  $$('.site-header [data-act="cart"]').forEach((b) => b.setAttribute('aria-label', t.count ? tr(`סל קניות, ${t.count} פריטים, ${nis(t.total)}`, `Cart, ${t.count} ${t.count === 1 ? 'item' : 'items'}, ${nis(t.total)}`) : tr('סל קניות ריק', 'Cart is empty')));
   const bar = $('[data-cart-bar]');
   if (bar) bar.hidden = !t.count;
 }
@@ -36,12 +37,13 @@ export function onAdd(el) {
   addItem(id, qty);
   if (qtyEl) qtyEl.textContent = '1';
   renderCart();
-  toast(`${qty > 1 ? `${qty} × ` : ''}${findItem(id).name} נוסף לסל`);
+  const name = loc(findItem(id).name);
+  toast(tr(`${qty > 1 ? `${qty} × ` : ''}${name} נוסף לסל`, `${qty > 1 ? `${qty} × ` : ''}${name} added to cart`));
   $$('[data-cart-count]').forEach((b) => { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); });
   if (!el.dataset.fixed) {
     const label = el.querySelector('span:last-child');
     const original = label ? label.textContent : '';
-    if (label) label.textContent = 'נוסף לסל';
+    if (label) label.textContent = tr('נוסף לסל', 'Added');
     el.classList.replace('bg-primary', 'bg-secondary');
     setTimeout(() => { if (label) label.textContent = original; el.classList.replace('bg-secondary', 'bg-primary'); }, 1400);
   }
@@ -58,12 +60,12 @@ export function onQty(el) {
   const next = line.qty + Number(el.dataset.d);
   setQty(el.dataset.id, next);
   renderCart();
-  if (next <= 0) toast(`${findItem(el.dataset.id).name} הוסר מהסל`, 'delete');
+  if (next <= 0) toast(tr(`${loc(findItem(el.dataset.id).name)} הוסר מהסל`, `${loc(findItem(el.dataset.id).name)} removed from cart`), 'delete');
 }
 
-export function onClear() { clearCart(); renderCart(); toast('הסל רוקן', 'delete_sweep'); }
+export function onClear() { clearCart(); renderCart(); toast(tr('הסל רוקן', 'Cart emptied'), 'delete_sweep'); }
 export function onMode(el) { setMode(el.dataset.mode); renderCart(); }
-export function onUnpromo() { setPromo(null); renderCart(); toast('קוד ההנחה הוסר', 'sell'); }
+export function onUnpromo() { setPromo(null); renderCart(); toast(tr('קוד ההנחה הוסר', 'Discount code removed'), 'sell'); }
 
 export function onCartButton() {
   const drawer = $('[data-layer="cart"]');
@@ -84,9 +86,13 @@ export function onFilter(el) {
     if (visible) shown++;
   });
   const count = $('[data-filter-count]');
-  const label = CATEGORIES.find((c) => c.id === cat).label;
-  if (count) count.textContent = cat === 'all' ? `${PRODUCTS.length} מוצרים ומארזים` : `${shown} מוצרים: ${label}`;
-  toast(`מוצגים ${shown} מוצרים${cat === 'all' ? '' : ` בקטגוריה ${label}`}`, 'filter_list');
+  const label = loc(CATEGORIES.find((c) => c.id === cat).label);
+  if (count) {
+    count.textContent = cat === 'all'
+      ? tr(`${PRODUCTS.length} מוצרים ומארזים`, `${PRODUCTS.length} products and boxes`)
+      : tr(`${shown} מוצרים: ${label}`, `${shown} products: ${label}`);
+  }
+  toast(cat === 'all' ? tr(`מוצגים ${shown} מוצרים`, `Showing ${shown} products`) : tr(`מוצגים ${shown} מוצרים בקטגוריה ${label}`, `Showing ${shown} products in ${label}`), 'filter_list');
   $(`[data-filters] [data-cat="${cat}"]`)?.focus();
 }
 

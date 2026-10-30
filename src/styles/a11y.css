@@ -5,7 +5,7 @@
 
 /* Skip link: hidden until focused */
 .skip-link {
-  position: fixed; top: 0.5rem; right: 0.5rem; z-index: 200;
+  position: fixed; top: 0.5rem; inset-inline-start: 0.5rem; z-index: 200;
   transform: translateY(-200%);
   background: rgb(var(--c-primary)); color: rgb(var(--c-on-primary));
   padding: 0.75rem 1.25rem; border-radius: 9999px; font-weight: 700;

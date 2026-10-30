@@ -1,5 +1,5 @@
 /** Drawers and dialogs: open/close, focus trap, aria-expanded on their buttons */
-import { $, $$, focusables } from './dom.js';
+import { $, $$, focusables, hideToast } from './dom.js';
 
 let returnFocus = null;
 
@@ -13,7 +13,7 @@ function setExpanded(id, value) {
 
 /** Make the rest of the page inert while a modal is open */
 function setPageInert(value) {
-  ['.site-header', '#main', 'footer', 'nav[aria-label="ניווט מהיר"]', '.skip-link'].forEach((sel) => {
+  ['.site-header', '#main', 'footer', '[data-bottom-nav]', '.skip-link'].forEach((sel) => {
     const el = $(sel);
     if (el) el.inert = value;
   });
@@ -24,9 +24,9 @@ export function openLayer(el) {
   returnFocus = document.activeElement;
   el.hidden = false;
   scrim().hidden = false;
-  void el.offsetWidth; // let the hidden → visible change apply before animating
-  el.classList.remove('translate-x-full', 'translate-y-full', 'lg:-translate-x-full');
-  if (el.dataset.layer === 'cart') el.classList.add('lg:translate-x-0');
+  void el.offsetWidth; // let the hidden → visible change apply before sliding in (.layer in main.css)
+  el.dataset.open = 'true';
+  hideToast();
   setExpanded(el.id, true);
   setPageInert(true);
   document.body.classList.add('overflow-hidden');
@@ -38,8 +38,7 @@ export function closeLayers(restoreFocus = true) {
   const open = openLayers();
   if (!open.length) return;
   open.forEach((el) => {
-    if (el.dataset.layer === 'drawer') el.classList.add('translate-x-full');
-    else { el.classList.add('translate-y-full', 'lg:-translate-x-full'); el.classList.remove('lg:translate-x-0'); }
+    delete el.dataset.open;
     setExpanded(el.id, false);
     setTimeout(() => { el.hidden = true; }, 280);
   });

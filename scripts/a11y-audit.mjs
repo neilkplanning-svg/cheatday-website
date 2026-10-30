@@ -1,5 +1,5 @@
 /**
- * Accessibility audit: runs axe-core (WCAG 2.0/2.1/2.2 A + AA rules) on every page,
+ * Accessibility audit: runs axe-core (WCAG 2.0/2.1/2.2 A + AA rules) on every page in both languages,
  * on phone and desktop sizes, in normal, high-contrast and dark-contrast modes.
  * Also checks for horizontal scrolling at 320px (WCAG 1.4.10 reflow).
  *
@@ -14,6 +14,7 @@ import { serve } from './lib/static-server.mjs';
 import { SITE } from '../src/data/index.js';
 import { PAGES } from '../src/pages/index.js';
 import { PAGE_FILES } from '../src/lib/paths.js';
+import { LANGS } from '../src/lib/i18n.js';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
@@ -35,8 +36,12 @@ for (const [vpName, width, height] of VIEWPORTS) {
   const ctx = await browser.newContext({ viewport: { width, height } });
   const page = await ctx.newPage();
   page.on('pageerror', (e) => problems.push(`[${vpName}] JS error: ${e.message}`));
-  for (const p of PAGES) {
-    await page.goto(base + (p.id === 'home' ? '' : PAGE_FILES[p.id]), { waitUntil: 'networkidle' });
+  const targets = LANGS.flatMap((lang) => PAGES.filter((p) => (p.langs || LANGS).includes(lang)).map((p) => ({
+    id: lang === 'he' ? p.id : `${lang}/${p.id}`,
+    path: (lang === 'he' ? '' : `${lang}/`) + (p.id === 'home' ? '' : PAGE_FILES[p.id]),
+  })));
+  for (const p of targets) {
+    await page.goto(base + p.path, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     if (overflow > 1) problems.push(`[${vpName}] ${p.id}: horizontal scroll of ${overflow}px`);

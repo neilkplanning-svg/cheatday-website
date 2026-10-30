@@ -1,9 +1,10 @@
 /** Accessibility panel: preferences, applying them to <html>, reading guide and keyboard shortcut */
-import { a11yPanel, TEXT_STEPS, A11Y_TOGGLES } from '../components/a11y-panel.js';
+import { a11yPanel, TEXT_STEPS, A11Y_KEYS, a11yToggles } from '../components/a11y-panel.js';
+import { tr } from '../lib/i18n.js';
 import { store, KEYS } from '../lib/storage.js';
 import { $, $$, toast, focusables } from './dom.js';
 
-const DEFAULTS = { scale: 100, ...Object.fromEntries(A11Y_TOGGLES.map(([k]) => [k, false])) };
+const DEFAULTS = { scale: 100, ...Object.fromEntries(A11Y_KEYS.map((k) => [k, false])) };
 const prefs = { ...DEFAULTS, ...store.get(KEYS.a11y, {}) };
 if (!TEXT_STEPS.includes(prefs.scale)) prefs.scale = 100;
 
@@ -14,7 +15,7 @@ const panel = () => $('[data-a11y]');
 export function applyA11y() {
   const html = document.documentElement;
   html.style.fontSize = prefs.scale === 100 ? '' : `${prefs.scale}%`;
-  A11Y_TOGGLES.forEach(([key]) => html.classList.toggle(`a11y-${key}`, Boolean(prefs[key])));
+  A11Y_KEYS.forEach((key) => html.classList.toggle(`a11y-${key}`, Boolean(prefs[key])));
   // the two contrast modes exclude each other
   if (prefs.contrast && prefs.dark) html.classList.remove('a11y-contrast');
   const guide = $('[data-reading-guide]');
@@ -47,7 +48,7 @@ export function closeA11y() {
   if (returnFocus && returnFocus.isConnected) returnFocus.focus();
 }
 
-const LABELS = Object.fromEntries(A11Y_TOGGLES.map(([k, , label]) => [k, label]));
+const label = (key) => (a11yToggles().find(([k]) => k === key) || [])[2] || key;
 
 export function setA11y(key) {
   const i = TEXT_STEPS.indexOf(prefs.scale);
@@ -65,9 +66,9 @@ export function setA11y(key) {
   const again = $(`[data-a11y] [data-k="${key}"]`);
   if (again && !again.disabled) again.focus();
   else panel().querySelector('h2').focus();
-  if (key === 'reset') toast('הגדרות הנגישות אופסו', 'restart_alt');
-  else if (['plus', 'minus', 'size-reset'].includes(key)) toast(`גודל טקסט: ${prefs.scale}%`, 'format_size');
-  else toast(`${LABELS[key]}: ${prefs[key] ? 'מופעל' : 'כבוי'}`, 'accessibility_new');
+  if (key === 'reset') toast(tr('הגדרות הנגישות אופסו', 'Accessibility settings reset'), 'restart_alt');
+  else if (['plus', 'minus', 'size-reset'].includes(key)) toast(`${tr('גודל טקסט', 'Text size')}: ${prefs.scale}%`, 'format_size');
+  else toast(`${label(key)}: ${prefs[key] ? tr('מופעל', 'on') : tr('כבוי', 'off')}`, 'accessibility_new');
 }
 
 /** Panel focus trap + Esc, and the global Alt+A shortcut */

@@ -1,17 +1,15 @@
 /**
  * Site-wide settings: address on the web, search engines and analytics.
  * After connecting a domain, change `siteUrl` and `domain` and push – the build updates
- * canonical links, the sitemap and the CNAME file automatically.
+ * canonical links, language alternates, the sitemap and the CNAME file automatically.
  */
 export const SITE = {
   /** Full public address, with a trailing slash */
   siteUrl: 'https://neilkplanning-svg.github.io/cheatday-website/',
   /** Custom domain for GitHub Pages (e.g. 'cheatday.co.il'). Empty = no CNAME file */
   domain: '',
-  lang: 'he',
-  dir: 'rtl',
-  locale: 'he_IL',
   themeColor: '#b60058',
+  locales: { he: 'he_IL', en: 'en_US' },
 
   /**
    * Draft mode: shows a "sample content" bar, marks sample reviews and tells search engines

@@ -2,10 +2,11 @@
 
 אתר לעסק הביתי **CheatDay**: סינבונים וקינוחים בעבודת יד מחריש.
 האתר מותאם לנייד ולמחשב, אפשר להתקין אותו כאפליקציה במסך הבית (PWA), וההזמנות נשלחות לעסק כהודעת וואטסאפ מסודרת.
+האתר דו-לשוני: עברית בשורש האתר ואנגלית תחת `/en/`, עם כפתור מעבר שפה בכל עמוד.
 
 - **עמודים:** דף הבית, תפריט והזמנות, הסוד שלנו ורכיבים, יצירת קשר, הצהרת נגישות, תנאי שימוש ופרטיות, ו-404.
-- **גוגל:** כל עמוד נבנה מראש כקובץ HTML סטטי, עם canonical, תגיות Open Graph, `sitemap.xml`, `robots.txt` ונתונים מובנים (Bakery, Menu, FAQ, Breadcrumbs).
-- **נגישות:** ת״י 5568 / WCAG 2.2 ברמה AA, עם תפריט נגישות מורחב (Alt+A). הבדיקה האוטומטית (`npm run audit:a11y`) מריצה axe-core על כל העמודים ומחזירה 0 הפרות.
+- **גוגל:** כל עמוד נבנה מראש כקובץ HTML סטטי בכל שפה, עם canonical, קישורי hreflang בין השפות, תגיות Open Graph, `sitemap.xml`, `robots.txt` ונתונים מובנים (Bakery, Menu, FAQ, Breadcrumbs).
+- **נגישות:** ת״י 5568 / WCAG 2.2 ברמה AA, עם תפריט נגישות מורחב (Alt+A). הבדיקה האוטומטית (`npm run audit:a11y`) מריצה axe-core על כל העמודים בשתי השפות ומחזירה 0 הפרות.
 
 ## מבנה הקוד
 
@@ -13,7 +14,7 @@
 src/
   data/          כל התוכן: site.js (כתובת, גוגל), business.js (קשר, שעות, משלוחים),
                  menu.js (מוצרים ומחירים), content.js (רכיבים, ביקורות, שאלות נפוצות)
-  lib/           עזרים טהורים: html, format, schedule, links, storage, paths, art (איורי SVG)
+  lib/           עזרים טהורים: i18n (שפות), html, format, schedule, links, storage, paths, art (איורי SVG)
   components/    חלקי ממשק: header, footer, overlays, product-card, cart-panel, a11y-panel, sections
   pages/         עמוד לכל קובץ: home, menu, story, contact, accessibility, terms, not-found
   seo/           meta.js (תגיות head), schema.js (JSON-LD)
@@ -38,7 +39,9 @@ npm run brand          # יוצר מחדש לוגו/אייקונים/תמונת 
 
 **לשנות מחיר, מוצר, שעות או טלפון:** עורכים רק את הקבצים ב-`src/data/` ודוחפים ל-`main`. GitHub Actions בונה ומעלה את האתר אוטומטית.
 
-**תמונות אמיתיות:** שמים קובץ ב-`public/assets/img/` ומוסיפים למוצר ב-`src/data/menu.js` את השדות `image: 'assets/img/classic.webp'` ו-`imageAlt: 'תיאור התמונה'`.
+**טקסטים בשתי שפות:** בקבצי `src/data/` כל טקסט כתוב כ-`{ he: '…', en: '…' }`. בעמודים ובחלקי הממשק משתמשים ב-`tr('עברית', 'English')`. מעדכנים תמיד את שתי השפות יחד.
+
+**תמונות אמיתיות:** שמים קובץ ב-`public/assets/img/` ומוסיפים למוצר ב-`src/data/menu.js` את השדות `image: 'assets/img/classic.webp'` ו-`imageAlt: { he: 'תיאור התמונה', en: 'Image description' }`.
 
 ## עלייה לאוויר
 

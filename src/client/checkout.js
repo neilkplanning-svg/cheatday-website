@@ -1,12 +1,13 @@
 /** Checkout dialog: customer details → WhatsApp message ready to send */
 import { BUSINESS, DELIVERY, ORDERING } from '../data/index.js';
 import { esc, ic, each } from '../lib/html.js';
-import { nis, fmtDate, isoDate, DAY_NAMES } from '../lib/format.js';
+import { nis, fmtDate, isoDate, dayName } from '../lib/format.js';
+import { tr, loc, locList } from '../lib/i18n.js';
 import { firstOrderDate, isOpenDay, slotsFor } from '../lib/schedule.js';
 import { waLink } from '../lib/links.js';
 import { store, KEYS } from '../lib/storage.js';
 import { state, totals, setMode, clearCart, rememberCustomer } from './state.js';
-import { $, toast, announce } from './dom.js';
+import { $, toast, announce, hideToast } from './dom.js';
 import { closeLayers, setPageInert } from './layers.js';
 import { renderCart } from './cart.js';
 
@@ -25,46 +26,47 @@ const field = (id, label, input, hint = '') => `
 const header = (title, icon) => `
   <div class="flex items-center justify-between mb-space-md">
     <h2 id="co-title" class="text-headline-md text-on-surface flex items-center gap-space-xs" tabindex="-1">${ic(icon, 'text-primary')}${title}</h2>
-    <button type="button" data-act="close-checkout" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center" aria-label="סגירת חלון ההזמנה">${ic('close')}</button>
+    <button type="button" data-act="close-checkout" class="w-11 h-11 rounded-full bg-surface-container flex items-center justify-center" aria-label="${tr('סגירת חלון ההזמנה', 'Close the order window')}">${ic('close')}</button>
   </div>`;
 
 function formHtml() {
   const c = state.customer;
   const minDate = isoDate(firstOrderDate());
-  return `${header('פרטי ההזמנה', 'receipt_long')}
+  return `${header(tr('פרטי ההזמנה', 'Order details'), 'receipt_long')}
   <form data-form="checkout" class="flex flex-col gap-space-md" novalidate>
-    <p class="text-body-sm text-on-surface-variant">כל השדות חובה, חוץ מהערות.</p>
+    <p class="text-body-sm text-on-surface-variant">${tr('כל השדות חובה, חוץ מהערות.', 'All fields are required except notes.')}</p>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-      ${field('co-name', 'שם מלא', `<input class="field" id="co-name" name="name" required aria-required="true" autocomplete="name" value="${esc(c.name || '')}" aria-describedby="co-name-err">`)}
-      ${field('co-phone', 'טלפון נייד', `<input class="field text-right" dir="ltr" id="co-phone" name="phone" type="tel" inputmode="tel" required aria-required="true" autocomplete="tel" value="${esc(c.phone || '')}" placeholder="050-0000000" aria-describedby="co-phone-err">`)}
+      ${field('co-name', tr('שם מלא', 'Full name'), `<input class="field" id="co-name" name="name" required aria-required="true" autocomplete="name" value="${esc(c.name || '')}" aria-describedby="co-name-err">`)}
+      ${field('co-phone', tr('טלפון נייד', 'Mobile phone'), `<input class="field text-start" dir="ltr" id="co-phone" name="phone" type="tel" inputmode="tel" required aria-required="true" autocomplete="tel" value="${esc(c.phone || '')}" placeholder="050-0000000" aria-describedby="co-phone-err">`)}
     </div>
-    ${DELIVERY.enabled ? `<fieldset class="flex flex-col gap-space-xs"><legend class="label mb-space-xs">קבלת ההזמנה</legend>
+    ${DELIVERY.enabled ? `<fieldset class="flex flex-col gap-space-xs"><legend class="label mb-space-xs">${tr('קבלת ההזמנה', 'How to get it')}</legend>
       <div class="grid grid-cols-2 gap-space-xs p-space-xs bg-surface-container-low rounded-full">
-        ${each([['pickup', 'storefront', `איסוף עצמי ב${BUSINESS.city}`], ['delivery', 'moped', 'משלוח עד הבית']], ([v, i, l]) => `<label class="cursor-pointer"><input type="radio" name="mode" value="${v}" class="peer sr-only" ${state.mode === v ? 'checked' : ''}>
+        ${each([['pickup', 'storefront', tr(`איסוף עצמי ב${loc(BUSINESS.city)}`, `Pickup in ${loc(BUSINESS.city)}`)], ['delivery', 'moped', tr('משלוח עד הבית', 'Home delivery')]], ([v, i, l]) => `<label class="cursor-pointer"><input type="radio" name="mode" value="${v}" class="peer sr-only" ${state.mode === v ? 'checked' : ''}>
           <span class="flex items-center justify-center gap-space-xs min-h-[2.75rem] px-space-sm rounded-full text-label-sm peer-checked:bg-primary peer-checked:text-on-primary peer-focus-visible:ring-4 peer-focus-visible:ring-primary">${ic(i, '!text-[1rem]')}${l}</span></label>`)}
       </div></fieldset>` : ''}
     <div data-address ${state.mode === 'delivery' ? '' : 'hidden'}>
-      ${field('co-address', 'כתובת למשלוח', `<input class="field" id="co-address" name="address" autocomplete="street-address" value="${esc(c.address || '')}" placeholder="רחוב, מספר, דירה, עיר" aria-describedby="co-address-hint co-address-err">`, `משלוחים ל${esc(DELIVERY.areas.join(', '))}`)}
+      ${field('co-address', tr('כתובת למשלוח', 'Delivery address'), `<input class="field" id="co-address" name="address" autocomplete="street-address" value="${esc(c.address || '')}" placeholder="${tr('רחוב, מספר, דירה, עיר', 'Street, number, flat, town')}" aria-describedby="co-address-hint co-address-err">`, tr(`משלוחים ל${esc(locList(DELIVERY.areas).join(', '))}`, `We deliver to ${esc(locList(DELIVERY.areas).join(', '))}`))}
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
-      ${field('co-date', 'תאריך', `<input class="field" id="co-date" name="date" type="date" min="${minDate}" value="${minDate}" required aria-required="true" aria-describedby="co-date-err">`)}
-      ${field('co-slot', 'שעה', `<select class="field" id="co-slot" name="slot" required aria-required="true" aria-describedby="co-slot-err">${each(slotsFor(minDate), (s) => `<option>${s}</option>`)}</select>`)}
+      ${field('co-date', tr('תאריך איסוף', 'Pickup date'), `<input class="field" id="co-date" name="date" type="date" min="${minDate}" value="${minDate}" required aria-required="true" aria-describedby="co-date-hint co-date-err">`, `${esc(loc(ORDERING.leadNote))}. ${esc(loc(ORDERING.rushNote))}.`)}
+      ${field('co-slot', tr('שעה', 'Time'), `<select class="field" id="co-slot" name="slot" required aria-required="true" aria-describedby="co-slot-err">${each(slotsFor(minDate), (s) => `<option>${s}</option>`)}</select>`)}
     </div>
-    ${field('co-pay', 'איך נוח לכם לשלם?', `<select class="field" id="co-pay" name="pay">${each(ORDERING.payments, (p) => `<option ${c.pay === p ? 'selected' : ''}>${esc(p)}</option>`)}</select>`)}
-    <div class="flex flex-col gap-space-xs"><label class="label" for="co-notes">הערות (רשות)</label>
-      <textarea class="field resize-y" id="co-notes" name="notes" rows="2" placeholder="ברכה למארז, גלייז בצד, אלרגיות...">${esc(state.notes)}</textarea></div>
-    <p class="p-space-sm rounded bg-surface-container-low flex items-center justify-between text-headline-sm"><span>סה״כ לתשלום</span><span class="text-primary tabular-nums" data-co-total>${nis(totals().total)}</span></p>
-    <button type="submit" class="btn-pop w-full min-h-[3.25rem] rounded-full bg-primary text-on-primary text-headline-sm flex items-center justify-center gap-space-xs shadow-pop-md">סיכום ושליחה ${ic('arrow_back')}</button>
-    <p class="text-label-sm text-on-surface-variant text-center">ההזמנה נשלחת אלינו בוואטסאפ ונאשר אותה בהקדם. התשלום רק אחרי האישור.</p>
+    ${field('co-pay', tr('איך נוח לכם לשלם?', 'How would you like to pay?'), `<select class="field" id="co-pay" name="pay">${each(locList(ORDERING.payments), (p) => `<option ${c.pay === p ? 'selected' : ''}>${esc(p)}</option>`)}</select>`)}
+    <div class="flex flex-col gap-space-xs"><label class="label" for="co-notes">${tr('הערות (רשות)', 'Notes (optional)')}</label>
+      <textarea class="field resize-y" id="co-notes" name="notes" rows="2" placeholder="${tr('ברכה למארז, גלייז בצד, אלרגיות...', 'Greeting for the box, glaze on the side, allergies...')}">${esc(state.notes)}</textarea></div>
+    <p class="p-space-sm rounded bg-surface-container-low flex items-center justify-between text-headline-sm"><span>${tr('סה״כ לתשלום', 'Total to pay')}</span><span class="text-primary tabular-nums" data-co-total>${nis(totals().total)}</span></p>
+    <button type="submit" class="btn-pop w-full min-h-[3.25rem] rounded-full bg-primary text-on-primary text-headline-sm flex items-center justify-center gap-space-xs shadow-pop-md">${tr('סיכום ושליחה', 'Review & send')} ${ic('arrow_back', 'fwd')}</button>
+    <p class="text-label-sm text-on-surface-variant text-center">${tr('ההזמנה נשלחת אלינו בוואטסאפ ונאשר אותה בהקדם. התשלום רק אחרי האישור.', 'Your order reaches us on WhatsApp and we will confirm it soon. You pay only after we confirm.')}</p>
   </form>`;
 }
 
 export function openCheckout() {
-  if (!totals().count) { toast('הסל עדיין ריק – בחרו משהו מתוק', 'cookie'); return; }
+  if (!totals().count) { toast(tr('הסל עדיין ריק – בחרו משהו מתוק', 'Your cart is empty – pick something sweet'), 'cookie'); return; }
   returnFocus = document.activeElement && document.activeElement.closest('[data-layer]') ? $('.site-header [data-act="cart"]') : document.activeElement;
   closeLayers(false);
   body().innerHTML = formHtml();
   dialog().hidden = false;
+  hideToast();
   setPageInert(true);
   document.body.classList.add('overflow-hidden');
   $('#co-title').focus();
@@ -77,27 +79,30 @@ export function closeCheckout() {
   if (returnFocus && returnFocus.isConnected) returnFocus.focus();
 }
 
+/** Item name for the order message; English orders also carry the Hebrew name, on its own line, for the kitchen */
+const itemName = (item) => tr(loc(item.name), `${loc(item.name)}\n   ${item.name.he}`);
+
 /** WhatsApp message text */
 export function orderText(f) {
   const t = totals();
   const club = store.get(KEYS.club, null);
   const sections = [
-    [`היי ${BUSINESS.name}! 🧁 הזמנה חדשה מהאתר`],
+    [tr(`היי ${BUSINESS.name}! 🧁 הזמנה חדשה מהאתר`, `Hi ${BUSINESS.name}! 🧁 New order from the website (English)`)],
     [
-      `👤 שם: ${f.name}`,
-      `📞 טלפון: ${f.phone}`,
-      f.mode === 'delivery' ? `🛵 משלוח לכתובת: ${f.address}` : `🏠 איסוף עצמי ב${BUSINESS.city}`,
+      `👤 ${tr('שם', 'Name')}: ${f.name}`,
+      `📞 ${tr('טלפון', 'Phone')}: ${f.phone}`,
+      f.mode === 'delivery' ? `🛵 ${tr('משלוח לכתובת', 'Delivery to')}: ${f.address}` : `🏠 ${tr(`איסוף עצמי ב${loc(BUSINESS.city)}`, `Pickup in ${loc(BUSINESS.city)}`)}`,
       `📅 ${fmtDate(new Date(`${f.date}T12:00:00`))} | ${f.slot}`,
     ],
-    t.lines.map((l) => `• ${l.qty} × ${l.item.name} – ${nis(l.item.price * l.qty)}`),
+    t.lines.map((l) => `• ${l.qty} × ${itemName(l.item)} – ${nis(l.item.price * l.qty)}`),
     [
-      `סכום ביניים: ${nis(t.subtotal)}`,
-      t.discount && `הנחת מועדון (${state.promo}): −${nis(t.discount)}`,
-      f.mode === 'delivery' && `משלוח: ${t.delivery ? nis(t.delivery) : 'חינם'}`,
-      `*סה״כ: ${nis(t.total)}*`,
-      `💳 תשלום: ${f.pay}`,
+      `${tr('סכום ביניים', 'Subtotal')}: ${nis(t.subtotal)}`,
+      t.discount && `${tr('הנחת מועדון', 'Club discount')} (${state.promo}): −${nis(t.discount)}`,
+      f.mode === 'delivery' && `${tr('משלוח', 'Delivery')}: ${t.delivery ? nis(t.delivery) : tr('חינם', 'free')}`,
+      `*${tr('סה״כ', 'Total')}: ${nis(t.total)}*`,
+      `💳 ${tr('תשלום', 'Payment')}: ${f.pay}`,
     ],
-    [f.notes && `📝 הערות: ${f.notes}`, club && `⭐ הצטרף/ה למועדון: ${club}`],
+    [f.notes && `📝 ${tr('הערות', 'Notes')}: ${f.notes}`, club && `⭐ ${tr('הצטרף/ה למועדון', 'Joined the club')}: ${club}`],
   ];
   return sections.map((s) => s.filter(Boolean).join('\n')).filter(Boolean).join('\n\n');
 }
@@ -107,12 +112,15 @@ function validate(form, f) {
   const errors = {};
   const phoneOk = /^0\d{8,9}$/.test((f.phone || '').replace(/[\s-]/g, ''));
   const date = f.date ? new Date(`${f.date}T12:00:00`) : null;
-  if (!f.name.trim()) errors['co-name'] = 'נא למלא שם מלא';
-  if (!phoneOk) errors['co-phone'] = 'מספר הטלפון לא תקין. למשל: 050-1234567';
-  if (f.mode === 'delivery' && !(f.address || '').trim()) errors['co-address'] = 'נא למלא כתובת למשלוח';
-  if (!date || f.date < isoDate(firstOrderDate())) errors['co-date'] = `אפשר להזמין החל מ${fmtDate(firstOrderDate())}`;
-  else if (!isOpenDay(date.getDay())) errors['co-date'] = `ביום ${DAY_NAMES[date.getDay()]} אין איסוף. בחרו יום אחר`;
-  if (!errors['co-date'] && !f.slot) errors['co-slot'] = 'נא לבחור שעה';
+  if (!f.name.trim()) errors['co-name'] = tr('נא למלא שם מלא', 'Please enter your full name');
+  if (!phoneOk) errors['co-phone'] = tr('מספר הטלפון לא תקין. למשל: 050-1234567', 'The phone number is not valid. For example: 050-1234567');
+  if (f.mode === 'delivery' && !(f.address || '').trim()) errors['co-address'] = tr('נא למלא כתובת למשלוח', 'Please enter a delivery address');
+  if (!date || f.date < isoDate(firstOrderDate())) {
+    errors['co-date'] = tr(`אפשר להזמין החל מ${fmtDate(firstOrderDate())}. ${loc(ORDERING.rushNote)}`, `The earliest date is ${fmtDate(firstOrderDate())}. ${loc(ORDERING.rushNote)}`);
+  } else if (!isOpenDay(date.getDay())) {
+    errors['co-date'] = tr(`ביום ${dayName(date.getDay())} אין איסוף. בחרו יום אחר`, `There is no pickup on ${dayName(date.getDay())}. Please choose another day`);
+  }
+  if (!errors['co-date'] && !f.slot) errors['co-slot'] = tr('נא לבחור שעה', 'Please choose a time');
   return showErrors(form, errors);
 }
 
@@ -126,7 +134,8 @@ export function showErrors(form, errors) {
   });
   const first = Object.keys(errors)[0];
   if (first) {
-    announce(`יש ${Object.keys(errors).length} שדות לתיקון. ${errors[first]}`);
+    const n = Object.keys(errors).length;
+    announce(`${tr(`יש ${n} שדות לתיקון.`, `${n} ${n === 1 ? 'field needs' : 'fields need'} fixing.`)} ${errors[first]}`);
     form.querySelector(`#${first}`)?.focus();
     return false;
   }
@@ -139,18 +148,18 @@ export function submitCheckout(form) {
   if (!validate(form, f)) return;
   rememberCustomer({ name: f.name, phone: f.phone, address: f.address || state.customer.address, pay: f.pay }, f.notes || '');
   const text = orderText(f);
-  body().innerHTML = `${header('ההזמנה מוכנה לשליחה', 'task_alt')}
-    <p class="text-body-md text-on-surface-variant mb-space-sm">זו ההודעה שתישלח אלינו. לחצו על הכפתור הירוק ושלחו את ההודעה בוואטסאפ.</p>
-    <pre class="whitespace-pre-wrap font-sans text-body-md bg-surface-container-low rounded p-space-md max-h-72 overflow-y-auto text-on-surface" data-order-text tabindex="0" aria-label="תוכן ההזמנה">${esc(text)}</pre>
+  body().innerHTML = `${header(tr('ההזמנה מוכנה לשליחה', 'Your order is ready to send'), 'task_alt')}
+    <p class="text-body-md text-on-surface-variant mb-space-sm">${tr('זו ההודעה שתישלח אלינו. לחצו על הכפתור הירוק ושלחו את ההודעה בוואטסאפ.', 'This is the message we will receive. Tap the green button and send it on WhatsApp.')}</p>
+    <pre class="whitespace-pre-wrap font-sans text-body-md bg-surface-container-low rounded p-space-md max-h-72 overflow-y-auto text-on-surface" data-order-text tabindex="0" aria-label="${tr('תוכן ההזמנה', 'Order message')}">${esc(text)}</pre>
     <div class="flex flex-col gap-space-sm mt-space-md">
-      <a href="${waLink(text)}" target="_blank" rel="noopener" data-act="sent" class="btn-pop w-full min-h-[3.25rem] rounded-full bg-whatsapp text-on-primary text-headline-sm flex items-center justify-center gap-space-xs shadow-pop-md">${ic('send', 'flip')}שליחה בוואטסאפ<span class="sr-only"> (נפתח בחלון חדש)</span></a>
+      <a href="${waLink(text)}" target="_blank" rel="noopener" data-act="sent" class="btn-pop w-full min-h-[3.25rem] rounded-full bg-whatsapp text-on-primary text-headline-sm flex items-center justify-center gap-space-xs shadow-pop-md">${ic('send', 'flip')}${tr('שליחה בוואטסאפ', 'Send on WhatsApp')}<span class="sr-only">${tr(' (נפתח בחלון חדש)', ' (opens in a new tab)')}</span></a>
       <div class="grid grid-cols-2 gap-space-sm">
-        <button type="button" data-act="copy-order" class="min-h-[2.75rem] rounded-full bg-surface-container text-secondary text-label-md flex items-center justify-center gap-1">${ic('content_copy', '!text-[1.125rem]')}העתקת ההזמנה</button>
-        <button type="button" data-act="checkout" class="min-h-[2.75rem] rounded-full bg-surface-container text-secondary text-label-md flex items-center justify-center gap-1">${ic('edit', '!text-[1.125rem]')}עריכת פרטים</button>
+        <button type="button" data-act="copy-order" class="min-h-[2.75rem] rounded-full bg-surface-container text-secondary text-label-md flex items-center justify-center gap-1">${ic('content_copy', '!text-[1.125rem]')}${tr('העתקת ההזמנה', 'Copy order')}</button>
+        <button type="button" data-act="checkout" class="min-h-[2.75rem] rounded-full bg-surface-container text-secondary text-label-md flex items-center justify-center gap-1">${ic('edit', '!text-[1.125rem]')}${tr('עריכת פרטים', 'Edit details')}</button>
       </div>
       <div data-after-send hidden class="p-space-md rounded bg-primary-fixed text-on-primary-fixed flex flex-col gap-space-sm items-center text-center" role="status">
-        <p class="text-label-lg">שלחתם? מעולה! נחזור אליכם לאישור בהקדם 🧡</p>
-        <button type="button" data-act="done" class="px-space-lg min-h-[2.75rem] rounded-full bg-primary text-on-primary text-label-md">סיום וריקון הסל</button>
+        <p class="text-label-lg">${tr('שלחתם? מעולה! נחזור אליכם לאישור בהקדם 🧡', 'Sent? Great! We will get back to you to confirm soon 🧡')}</p>
+        <button type="button" data-act="done" class="px-space-lg min-h-[2.75rem] rounded-full bg-primary text-on-primary text-label-md">${tr('סיום וריקון הסל', 'Done – empty the cart')}</button>
       </div>
     </div>`;
   body().scrollTop = 0;
@@ -167,14 +176,14 @@ export function onCheckoutChange(e) {
   }
   if (el.id === 'co-date') {
     const slots = slotsFor(el.value);
-    $('#co-slot').innerHTML = slots.length ? each(slots, (s) => `<option>${s}</option>`) : '<option value="">אין איסוף ביום זה</option>';
+    $('#co-slot').innerHTML = slots.length ? each(slots, (s) => `<option>${s}</option>`) : `<option value="">${tr('אין איסוף ביום זה', 'No pickup on this day')}</option>`;
   }
 }
 
 export function copyOrder() {
   const pre = $('[data-order-text]');
-  const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast('הטקסט מסומן – העתיקו ידנית', 'content_copy'); };
-  try { navigator.clipboard.writeText(pre.textContent).then(() => toast('ההזמנה הועתקה', 'content_copy'), fallback); } catch (err) { fallback(); }
+  const fallback = () => { const r = document.createRange(); r.selectNodeContents(pre); const s = getSelection(); s.removeAllRanges(); s.addRange(r); toast(tr('הטקסט מסומן – העתיקו ידנית', 'Text selected – copy it manually'), 'content_copy'); };
+  try { navigator.clipboard.writeText(pre.textContent).then(() => toast(tr('ההזמנה הועתקה', 'Order copied'), 'content_copy'), fallback); } catch (err) { fallback(); }
 }
 
 export function afterSend() { setTimeout(() => { const s = $('[data-after-send]'); if (s) s.hidden = false; }, 400); }
@@ -184,5 +193,5 @@ export function finishOrder() {
   rememberCustomer(state.customer, '');
   closeCheckout();
   renderCart();
-  toast('תודה! ההזמנה בטיפול', 'favorite');
+  toast(tr('תודה! ההזמנה בטיפול', 'Thank you! Your order is on its way'), 'favorite');
 }

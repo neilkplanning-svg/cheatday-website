@@ -10,6 +10,15 @@ import { applyA11y, toggleA11y, setA11y, a11yKeydown, initReadingGuide, closeA11
 import { fillDynamic, initDraftBar, hideDraftBar, selectChapter, tabsKeydown, initStory, videoSoon } from './dynamic.js';
 import { openLayer, closeLayers, activeModal, trapFocus } from './layers.js';
 import { initPwa, install } from './pwa.js';
+import { setLang, getLang, dir } from '../lib/i18n.js';
+
+/* Language of this page: <main data-lang> is set by the build (the claude.ai preview wraps
+   the home page in its own <html>, so that element may not carry lang/dir). */
+setLang(document.querySelector('main')?.dataset.lang || document.documentElement.lang);
+if (document.documentElement.lang !== getLang()) {
+  document.documentElement.lang = getLang();
+  document.documentElement.dir = dir();
+}
 
 const CLICK = {
   add: onAdd,

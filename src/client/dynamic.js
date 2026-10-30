@@ -1,6 +1,7 @@
 /** Content that depends on "now" or on this visitor: next order date, pickup status, draft bar, story tabs */
 import { PROCESS } from '../data/index.js';
 import { fmtDate } from '../lib/format.js';
+import { tr, loc, isEn } from '../lib/i18n.js';
 import { firstOrderDate, pickupStatus } from '../lib/schedule.js';
 import { store, KEYS } from '../lib/storage.js';
 import { $, $$, toast } from './dom.js';
@@ -37,18 +38,20 @@ export function selectChapter(i, focus = false) {
     t.querySelector('.chapter-num').className = `chapter-num w-10 h-10 rounded-full ${on ? 'bg-primary text-on-primary shadow-pop-sm' : 'bg-primary-container text-on-primary-container'} flex items-center justify-center text-headline-sm shrink-0`;
   });
   const panel = $('[data-chapter-text]');
-  panel.textContent = PROCESS[i].text;
+  panel.textContent = loc(PROCESS[i].text);
   panel.setAttribute('aria-labelledby', `chapter-tab-${i}`);
   if (focus) tabs[i].focus();
 }
 
-/** Arrow keys move between tabs (RTL: right = previous) */
+/** Arrow keys move between tabs (in Hebrew, right = previous) */
 export function tabsKeydown(e) {
   const tab = e.target.closest('[data-tabs] [role="tab"]');
   if (!tab) return false;
   const tabs = $$('[data-tabs] [role="tab"]');
   const i = tabs.indexOf(tab);
-  const map = { ArrowLeft: i + 1, ArrowRight: i - 1, Home: 0, End: tabs.length - 1 };
+  const back = isEn() ? 'ArrowLeft' : 'ArrowRight';
+  const forward = isEn() ? 'ArrowRight' : 'ArrowLeft';
+  const map = { [forward]: i + 1, [back]: i - 1, Home: 0, End: tabs.length - 1 };
   if (!(e.key in map)) return false;
   e.preventDefault();
   selectChapter((map[e.key] + tabs.length) % tabs.length, true);
@@ -59,4 +62,4 @@ export function initStory() {
   if ($('[data-tabs]')) selectChapter(0);
 }
 
-export const videoSoon = () => toast('סרטון האפייה יעלה בקרוב', 'videocam');
+export const videoSoon = () => toast(tr('סרטון האפייה יעלה בקרוב', 'The baking video is coming soon'), 'videocam');

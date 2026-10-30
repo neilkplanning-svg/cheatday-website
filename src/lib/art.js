@@ -181,6 +181,13 @@ export function product(art, seed, label) {
     MIX.forEach((m, i) => { s += roll(100 + (i % 3) * 100, 100 + Math.floor(i / 3) * 100, 42, m, seed + i); });
     return svg(W, H, s, label);
   }
+  if (art.kind === 'pair') {
+    let s = backdrop(W, H, BG.box, seed);
+    s += `<rect x="62" y="58" width="276" height="184" rx="26" fill="#2d1606" opacity=".14" transform="translate(6 10)"/>`;
+    s += `<rect x="62" y="58" width="276" height="184" rx="26" fill="#e11170"/><rect x="76" y="72" width="248" height="156" rx="18" fill="#fff1ea"/>`;
+    s += roll(140, 150, 62, { glaze: 'cream' }, seed + 'a') + roll(260, 150, 62, { glaze: 'cream' }, seed + 'b');
+    return svg(W, H, s, label);
+  }
   if (art.kind === 'tray') {
     let s = backdrop(W, H, BG.tray, seed);
     s += `<rect x="24" y="44" width="352" height="222" rx="30" fill="#2d1606" opacity=".14" transform="translate(5 9)"/><rect x="24" y="44" width="352" height="222" rx="30" fill="#e8c49a"/><rect x="36" y="56" width="328" height="198" rx="22" fill="#f3d6b2"/>`;
