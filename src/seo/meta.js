@@ -52,7 +52,7 @@ ${otherLocale.map((l) => `<meta property="og:locale:alternate" content="${l}">`)
 <meta property="og:image" content="${esc(image)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="${esc(tr(`הלוגו של ${BUSINESS.name} – סינבון עם גלייז ורוד`, `The ${BUSINESS.name} logo – a cinnamon roll with pink glaze`))}">
+<meta property="og:image:alt" content="${esc(tr(`הלוגו של ${BUSINESS.name} – סינבון עם גלייז ורוד`, `The ${BUSINESS.name} logo – a cinnamon roll with pink glaze`, `Логотип ${BUSINESS.name} — синнабон с розовой глазурью`))}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="${asset('icons/favicon.ico')}" sizes="48x48">
 <link rel="icon" href="${asset('icons/favicon-32.png')}" type="image/png" sizes="32x32">

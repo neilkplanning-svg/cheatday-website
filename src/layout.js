@@ -23,7 +23,7 @@ ${page.render()}
 ${footer(page.id)}
 ${bottomNav(page.id)}
 ${overlays(page.id)}
-<noscript><p class="fixed bottom-0 inset-x-0 z-[100] bg-inverse-surface text-inverse-on-surface p-space-md text-center">${tr('כדי להזמין באתר צריך JavaScript. אפשר להזמין גם בוואטסאפ או בטלפון', 'Ordering on the site needs JavaScript. You can also order on WhatsApp or by phone')} <span dir="ltr">${esc(BUSINESS.phone)}</span>.</p></noscript>
+<noscript><p class="fixed bottom-0 inset-x-0 z-[100] bg-inverse-surface text-inverse-on-surface p-space-md text-center">${tr('כדי להזמין באתר צריך JavaScript. אפשר להזמין גם בוואטסאפ או בטלפון', 'Ordering on the site needs JavaScript. You can also order on WhatsApp or by phone', 'Для заказа на сайте нужен JavaScript. Заказать можно также в WhatsApp или по телефону')} <span dir="ltr">${esc(BUSINESS.phone)}</span>.</p></noscript>
 <script src="${asset('assets/js/app.js')}?v=${version}" defer></script>`;
 }
 

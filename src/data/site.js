@@ -9,7 +9,7 @@ export const SITE = {
   /** Custom domain for GitHub Pages (e.g. 'cheatday.co.il'). Empty = no CNAME file */
   domain: '',
   themeColor: '#b60058',
-  locales: { he: 'he_IL', en: 'en_US' },
+  locales: { he: 'he_IL', en: 'en_US', ru: 'ru_RU' },
 
   /**
    * Draft mode: shows a "sample content" bar, marks sample reviews and tells search engines

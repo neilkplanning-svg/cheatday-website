@@ -1,7 +1,7 @@
 /** Content that depends on "now" or on this visitor: next order date, pickup status, draft bar, story tabs */
 import { PROCESS } from '../data/index.js';
 import { fmtDate } from '../lib/format.js';
-import { tr, loc, isEn } from '../lib/i18n.js';
+import { tr, loc, isRtl } from '../lib/i18n.js';
 import { firstOrderDate, pickupStatus } from '../lib/schedule.js';
 import { store, KEYS } from '../lib/storage.js';
 import { $, $$, toast } from './dom.js';
@@ -49,8 +49,8 @@ export function tabsKeydown(e) {
   if (!tab) return false;
   const tabs = $$('[data-tabs] [role="tab"]');
   const i = tabs.indexOf(tab);
-  const back = isEn() ? 'ArrowLeft' : 'ArrowRight';
-  const forward = isEn() ? 'ArrowRight' : 'ArrowLeft';
+  const back = isRtl() ? 'ArrowRight' : 'ArrowLeft';
+  const forward = isRtl() ? 'ArrowLeft' : 'ArrowRight';
   const map = { [forward]: i + 1, [back]: i - 1, Home: 0, End: tabs.length - 1 };
   if (!(e.key in map)) return false;
   e.preventDefault();
@@ -62,4 +62,4 @@ export function initStory() {
   if ($('[data-tabs]')) selectChapter(0);
 }
 
-export const videoSoon = () => toast(tr('סרטון האפייה יעלה בקרוב', 'The baking video is coming soon'), 'videocam');
+export const videoSoon = () => toast(tr('סרטון האפייה יעלה בקרוב', 'The baking video is coming soon', 'Видео о выпечке скоро появится'), 'videocam');

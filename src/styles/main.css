@@ -13,7 +13,8 @@
     @apply bg-surface text-on-surface font-sans text-body-md antialiased;
     overscroll-behavior-y: none;
   }
-  h1, h2, h3, h4 { text-wrap: balance; }
+  /* a word longer than the line (long Russian words on small phones) wraps instead of pushing the page sideways */
+  h1, h2, h3, h4 { text-wrap: balance; overflow-wrap: break-word; }
   :focus-visible { outline: 3px solid rgb(var(--c-primary)); outline-offset: 3px; border-radius: 0.5rem; }
   ::selection { background: rgb(var(--c-primary-fixed)); color: rgb(var(--c-on-primary-fixed)); }
   [hidden] { display: none !important; }

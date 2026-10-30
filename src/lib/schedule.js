@@ -36,7 +36,7 @@ export function pickupStatus(now = new Date()) {
   const h = hoursFor(now.getDay());
   const mins = now.getHours() * 60 + now.getMinutes();
   if (h && !h.closed && mins >= toMinutes(h.from) && mins < toMinutes(h.to)) {
-    return { open: true, text: tr(`האיסוף פתוח עד ${h.to}`, `Pickup open until ${h.to}`) };
+    return { open: true, text: tr(`האיסוף פתוח עד ${h.to}`, `Pickup open until ${h.to}`, `Самовывоз открыт до ${h.to}`) };
   }
-  return { open: false, text: tr('ההזמנות פתוחות באתר 24/7', 'Online orders open 24/7') };
+  return { open: false, text: tr('ההזמנות פתוחות באתר 24/7', 'Online orders open 24/7', 'Онлайн-заказы 24/7') };
 }

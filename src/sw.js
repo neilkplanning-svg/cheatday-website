@@ -3,7 +3,7 @@
 const VERSION = 'cheatday-__BUILD__';
 const PAGES = ['', 'index.html', 'menu.html', 'story.html', 'contact.html'];
 const CORE = [
-  ...PAGES.map((p) => `./${p}`), ...PAGES.map((p) => `./en/${p}`),
+  ...PAGES.map((p) => `./${p}`), ...['en', 'ru'].flatMap((l) => PAGES.map((p) => `./${l}/${p}`)),
   './assets/css/app.css', './assets/js/app.js', './assets/brand/logo-badge-96.webp', './manifest.webmanifest', './icons/icon-192.png',
 ];
 
@@ -21,7 +21,8 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   // Pages: network first, so a new menu shows up immediately; fall back to cache offline.
   if (req.mode === 'navigate') {
-    e.respondWith(fetch(req).then((r) => { const copy = r.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); return r; }).catch(() => caches.match(req).then((hit) => hit || caches.match(url.pathname.includes('/en/') ? './en/index.html' : './index.html'))));
+    const lang = (url.pathname.match(/\/(en|ru)\//) || [])[1];
+    e.respondWith(fetch(req).then((r) => { const copy = r.clone(); caches.open(VERSION).then((c) => c.put(req, copy)); return r; }).catch(() => caches.match(req).then((hit) => hit || caches.match(lang ? `./${lang}/index.html` : './index.html'))));
     return;
   }
   // Own assets and Google Fonts: cache first, refresh in the background.

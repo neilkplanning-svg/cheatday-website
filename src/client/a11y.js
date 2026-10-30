@@ -66,9 +66,9 @@ export function setA11y(key) {
   const again = $(`[data-a11y] [data-k="${key}"]`);
   if (again && !again.disabled) again.focus();
   else panel().querySelector('h2').focus();
-  if (key === 'reset') toast(tr('הגדרות הנגישות אופסו', 'Accessibility settings reset'), 'restart_alt');
-  else if (['plus', 'minus', 'size-reset'].includes(key)) toast(`${tr('גודל טקסט', 'Text size')}: ${prefs.scale}%`, 'format_size');
-  else toast(`${label(key)}: ${prefs[key] ? tr('מופעל', 'on') : tr('כבוי', 'off')}`, 'accessibility_new');
+  if (key === 'reset') toast(tr('הגדרות הנגישות אופסו', 'Accessibility settings reset', 'Настройки доступности сброшены'), 'restart_alt');
+  else if (['plus', 'minus', 'size-reset'].includes(key)) toast(`${tr('גודל טקסט', 'Text size', 'Размер текста')}: ${prefs.scale}%`, 'format_size');
+  else toast(`${label(key)}: ${prefs[key] ? tr('מופעל', 'on', 'вкл.') : tr('כבוי', 'off', 'выкл.')}`, 'accessibility_new');
 }
 
 /** Panel focus trap + Esc, and the global Alt+A shortcut */

@@ -2,7 +2,7 @@
  * CheatDay build – `npm run build`
  *
  *   dist/          the website: one static HTML file per page and language, ready for GitHub Pages or any host
- *                  (Hebrew at the root, English under dist/en/ with the same file names)
+ *                  (Hebrew at the root, English under dist/en/, Russian under dist/ru/, same file names)
  *   dist-preview/  (with --preview) the same pages for the claude.ai preview
  *
  * Steps: CSS (Tailwind) → JS bundle (esbuild) → pre-render pages → SEO files → PWA files → static assets
@@ -16,7 +16,7 @@ import * as esbuild from 'esbuild';
 import { SITE, BUSINESS } from '../src/data/index.js';
 import { PAGES } from '../src/pages/index.js';
 import { PAGE_FILES, setPreview } from '../src/lib/paths.js';
-import { LANGS, setLang } from '../src/lib/i18n.js';
+import { LANGS, setLang, missing } from '../src/lib/i18n.js';
 import { documentHtml, previewContent } from '../src/layout.js';
 import { sitemapXml, robotsTxt, manifest } from './lib/seo-files.mjs';
 
@@ -72,6 +72,11 @@ for (const lang of LANGS) {
   }
 }
 setLang('he');
+if (missing.size) {
+  console.error(`✗ ${missing.size} texts have no Russian translation (add the third argument to tr() or a ru: value):`);
+  missing.forEach((t) => console.error(`   ${t}`));
+  process.exitCode = 1;
+}
 
 /* 6. SEO + hosting files */
 write(at('dist/sitemap.xml'), sitemapXml(SITE, PAGES.filter((p) => !p.noindex), LANGS, today));

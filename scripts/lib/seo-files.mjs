@@ -46,8 +46,8 @@ export function manifest(business, site) {
       { src: `${up}icons/icon-maskable-512.png`, sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
     shortcuts: [
-      { name: tr('תפריט והזמנות', 'Menu & orders'), url: './menu.html' },
-      { name: tr('יצירת קשר', 'Contact'), url: './contact.html' },
+      { name: tr('תפריט והזמנות', 'Menu & orders', 'Меню и заказы'), url: './menu.html' },
+      { name: tr('יצירת קשר', 'Contact', 'Контакты'), url: './contact.html' },
     ],
   }, null, 2);
 }

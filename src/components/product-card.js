@@ -16,13 +16,13 @@ const BADGE_TONE = {
 /** Photo when available, otherwise the drawn illustration */
 const media = (p) => (p.image
   ? `<img src="${esc(asset(p.image))}" alt="${esc(loc(p.imageAlt) || loc(p.name))}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">`
-  : `<div class="art w-full h-full group-hover:scale-105 transition-transform duration-300">${ART.product(p.art, p.id, `${tr('איור', 'Illustration')}: ${loc(p.name)}`)}</div>`);
+  : `<div class="art w-full h-full group-hover:scale-105 transition-transform duration-300">${ART.product(p.art, p.id, `${tr('איור', 'Illustration', 'Иллюстрация')}: ${loc(p.name)}`)}</div>`);
 
 const badge = (p) => (p.badge
   ? `<span class="absolute top-space-sm start-space-sm chip ${BADGE_TONE[p.badge.tone] || BADGE_TONE.soft} shadow-sm">${icf(p.badge.icon, '!text-[0.875rem]')}${esc(loc(p.badge.text))}</span>`
   : '');
 
-const price = (p) => `<span class="absolute top-space-sm end-space-sm bg-primary text-on-primary text-label-md px-space-md py-space-xs rounded-full shadow-pop-sm tabular-nums"><span class="sr-only">${tr('מחיר', 'Price')}: </span>${nis(p.price)}</span>`;
+const price = (p) => `<span class="absolute top-space-sm end-space-sm bg-primary text-on-primary text-label-md px-space-md py-space-xs rounded-full shadow-pop-sm tabular-nums"><span class="sr-only">${tr('מחיר', 'Price', 'Цена')}: </span>${nis(p.price)}</span>`;
 
 const addButton = (p, label, fixed = false) => `
   <button type="button" class="btn-pop flex-1 min-h-[2.75rem] px-space-md bg-primary text-on-primary text-label-md rounded-full flex items-center justify-center gap-space-xs whitespace-nowrap"
@@ -42,17 +42,17 @@ export function productCard(p, variant = 'menu') {
         <h3 id="${headingId}" class="text-headline-sm text-on-surface">${name}</h3>
         <p class="text-body-sm text-on-surface-variant line-clamp-3">${esc(loc(p.desc))}</p>
       </div>
-      <div class="mt-auto px-space-xs pb-space-xs flex">${addButton(p, tr('הוספה לסל', 'Add to cart'), true)}</div>
+      <div class="mt-auto px-space-xs pb-space-xs flex">${addButton(p, tr('הוספה לסל', 'Add to cart', 'В корзину'), true)}</div>
     </article>`;
   }
 
   const actions = `<div class="mt-auto bg-surface-container-low/60 rounded p-space-sm flex flex-wrap items-center justify-between gap-space-sm">
-      ${stepper(p.id, loc(p.name))}${addButton(p, tr('הוספה להזמנה', 'Add to order'))}
+      ${stepper(p.id, loc(p.name))}${addButton(p, tr('הוספה להזמנה', 'Add to order', 'Добавить в заказ'))}
     </div>`;
   const body = `<div class="flex flex-col gap-space-xs">
       <h3 id="${headingId}" class="${p.wide ? 'text-headline-md' : 'text-headline-sm'} text-on-surface">${name}</h3>
       <p class="text-body-sm text-on-surface-variant">${esc(loc(p.desc))}</p>
-      <ul class="flex flex-wrap gap-space-xs pt-space-xs" aria-label="${tr('מאפיינים', 'Details')}">${tags}</ul>
+      <ul class="flex flex-wrap gap-space-xs pt-space-xs" aria-label="${tr('מאפיינים', 'Details', 'Подробности')}">${tags}</ul>
     </div>`;
   const pic = `<div class="relative w-full ${p.wide ? 'h-56' : 'h-52'} rounded overflow-hidden bg-surface-container">${media(p)}${price(p)}${badge(p)}</div>`;
 

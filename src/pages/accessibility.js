@@ -4,15 +4,15 @@ import { esc, ic, brandName } from '../lib/html.js';
 import { tr, loc } from '../lib/i18n.js';
 import { telHref } from '../lib/links.js';
 
-const pending = (v, he, en) => (v ? esc(v) : `<span class="chip bg-tertiary-fixed text-on-tertiary-fixed">${tr(`${he} יעודכן בקרוב`, `${en} coming soon`)}</span>`);
+const pending = (v, he, en, ru) => (v ? esc(v) : `<span class="chip bg-tertiary-fixed text-on-tertiary-fixed">${tr(`${he} יעודכן בקרוב`, `${en} coming soon`, `${ru} — скоро`)}</span>`);
 
 const contactList = () => {
   const phone = ACCESSIBILITY.phone || BUSINESS.phone;
   const email = ACCESSIBILITY.email || BUSINESS.email;
   return `<ul>
-      <li>${tr('רכזת נגישות', 'Accessibility coordinator')}: ${pending(loc(ACCESSIBILITY.coordinator), 'השם', 'Name')}</li>
-      <li>${tr('טלפון / וואטסאפ', 'Phone / WhatsApp')}: ${phone ? `<a href="${telHref()}" dir="ltr">${esc(phone)}</a>` : pending('', 'הטלפון', 'Phone')}</li>
-      <li>${tr('דוא״ל', 'Email')}: ${email ? `<a href="mailto:${esc(email)}" dir="ltr">${esc(email)}</a>` : pending('', 'הדוא״ל', 'Email')}</li>
+      <li>${tr('רכזת נגישות', 'Accessibility coordinator', 'Координатор по доступности')}: ${pending(loc(ACCESSIBILITY.coordinator), 'השם', 'Name', 'Имя')}</li>
+      <li>${tr('טלפון / וואטסאפ', 'Phone / WhatsApp', 'Телефон / WhatsApp')}: ${phone ? `<a href="${telHref()}" dir="ltr">${esc(phone)}</a>` : pending('', 'הטלפון', 'Phone', 'Телефон')}</li>
+      <li>${tr('דוא״ל', 'Email', 'Эл. почта')}: ${email ? `<a href="mailto:${esc(email)}" dir="ltr">${esc(email)}</a>` : pending('', 'הדוא״ל', 'Email', 'Эл. почта')}</li>
     </ul>`;
 };
 
@@ -29,7 +29,7 @@ const hebrew = () => `
       <li>חלונות קופצים (סל, הזמנה, תפריט) נגישים: המיקוד עובר אליהם, נשאר בתוכם ונסגר במקש Esc.</li>
       <li>התאמה לטלפונים, לטאבלטים ולמחשבים, ותמיכה בהגדלת תצוגה עד 400% בלי גלילה לרוחב.</li>
       <li>כיבוד הגדרת ״הפחתת תנועה״ של מערכת ההפעלה.</li>
-      <li>האתר זמין בעברית ובאנגלית, עם הגדרת שפה וכיוון טקסט נכונים בכל עמוד.</li>
+      <li>האתר זמין בעברית, באנגלית וברוסית, עם הגדרת שפה וכיוון טקסט נכונים בכל עמוד.</li>
     </ul>
 
     <h2>היכן נבדק האתר</h2>
@@ -60,7 +60,7 @@ const english = () => `
       <li>Accessible pop-up windows (cart, checkout, menu): focus moves into them, stays inside, and Esc closes them.</li>
       <li>Layouts for phones, tablets and computers, with zoom up to 400% and no horizontal scrolling.</li>
       <li>We respect the operating system’s “reduce motion” setting.</li>
-      <li>The site is available in Hebrew and English, with the correct language and text direction set on every page.</li>
+      <li>The site is available in Hebrew, English and Russian, with the correct language and text direction set on every page.</li>
     </ul>
 
     <h2>How the site was tested</h2>
@@ -78,21 +78,52 @@ const english = () => `
     <h2>Found a problem?</h2>
     <p>If anything on the site is not accessible to you, we want to hear about it and fix it quickly. Please tell us the page, the problem and the browser or assistive technology you use.</p>`;
 
+const russian = () => `
+    <p>В ${brandName(BUSINESS.name)} мы хотим, чтобы каждый мог легко сделать заказ — с любого устройства и с любыми вспомогательными технологиями. Сайт адаптирован в соответствии с израильскими Правилами о равных правах людей с инвалидностью (адаптация услуг для доступности) 2013 года и израильским стандартом IS 5568 (<span lang="he">ת״י 5568</span>), основанным на рекомендациях WCAG 2.0, на уровне AA. При разработке мы также применили требования WCAG 2.1 и 2.2.</p>
+
+    <h2>Что сделано на сайте</h2>
+    <ul>
+      <li>Постоянная кнопка доступности сбоку экрана (а также сочетание клавиш Alt+A): увеличение текста до 200%, высокий контраст, тёмный контраст, оттенки серого, выделение ссылок и заголовков, читаемый шрифт, интервалы текста, большой курсор, линейка для чтения, яркий фокус, остановка анимации и скрытие изображений. Настройки сохраняются в браузере.</li>
+      <li>Полная навигация с клавиатуры, логичный порядок фокуса, хорошо заметная рамка фокуса и ссылка «Перейти к основному содержанию» в начале каждой страницы.</li>
+      <li>Семантическая структура: области шапки, навигации, основного содержания и подвала, последовательная иерархия заголовков.</li>
+      <li>Контрастность текста не ниже 4,5:1 и текстовая альтернатива для каждой значимой иллюстрации.</li>
+      <li>Формы с понятными подписями, отмеченными обязательными полями и сообщениями об ошибках, которые зачитывают программы экранного доступа.</li>
+      <li>Доступные всплывающие окна (корзина, заказ, меню): фокус переходит в окно, остаётся внутри него, а клавиша Esc закрывает окно.</li>
+      <li>Адаптация для телефонов, планшетов и компьютеров, увеличение до 400% без горизонтальной прокрутки.</li>
+      <li>Учитывается системная настройка «Уменьшение движения».</li>
+      <li>Сайт доступен на иврите, английском и русском, на каждой странице правильно указаны язык и направление текста.</li>
+    </ul>
+
+    <h2>Как проверялся сайт</h2>
+    <p>Сайт проверен автоматическим инструментом axe-core по правилам WCAG 2.1 AA, навигацией с клавиатуры и при ширине экрана 320 пикселей. Он рассчитан на актуальные версии Chrome, Safari, Edge и Firefox и на работу с программами экранного доступа.</p>
+
+    <h2>Известные ограничения</h2>
+    <ul>
+      <li>Заказ отправляется через WhatsApp — внешний сервис, который мы не контролируем. Всегда можно заказать и по телефону.</li>
+      <li>Иллюстрации на сайте временные и будут заменены фотографиями. У каждой фотографии будет текстовое описание.</li>
+    </ul>
+
+    <h2>Доступность обслуживания</h2>
+    <p>Бизнес работает на домашней кухне и не принимает посетителей. Заказ выдаётся у дома; можно договориться о передаче к машине или о доставке до двери. Нужна особая помощь? Напишите нам, и мы сделаем всё, чтобы помочь.</p>
+
+    <h2>Столкнулись с проблемой?</h2>
+    <p>Если что-то на сайте для вас недоступно, мы хотим об этом узнать и быстро исправить. Укажите, пожалуйста, страницу, суть проблемы и браузер или вспомогательную технологию, которой вы пользуетесь.</p>`;
+
 export const page = {
   id: 'accessibility',
-  breadcrumb: () => tr('הצהרת נגישות', 'Accessibility statement'),
-  title: () => tr(`הצהרת נגישות | ${BUSINESS.name}`, `Accessibility statement | ${BUSINESS.name}`),
+  breadcrumb: () => tr('הצהרת נגישות', 'Accessibility statement', 'Заявление о доступности'),
+  title: () => tr(`הצהרת נגישות | ${BUSINESS.name}`, `Accessibility statement | ${BUSINESS.name}`, `Заявление о доступности | ${BUSINESS.name}`),
   description: () => tr(
     `הצהרת הנגישות של אתר ${BUSINESS.name}: התאמות שבוצעו לפי ת״י 5568 ברמה AA, תפריט נגישות, ופרטי קשר לפניות בנושא נגישות.`,
-    `The ${BUSINESS.name} accessibility statement: adjustments made under Israeli Standard IS 5568 level AA, the accessibility menu, and who to contact about accessibility.`),
+    `The ${BUSINESS.name} accessibility statement: adjustments made under Israeli Standard IS 5568 level AA, the accessibility menu, and who to contact about accessibility.`, `Заявление о доступности сайта ${BUSINESS.name}: адаптация по израильскому стандарту IS 5568 уровня AA, меню доступности и контакты по вопросам доступности.`),
   render: () => `
 <article class="wrap gutter-x py-space-xl max-w-3xl" aria-labelledby="a11y-page-title">
-  <p class="chip bg-surface-container-high text-secondary !px-space-md mb-space-sm w-fit">${ic('accessibility_new', '!text-[1.125rem]')}${tr('ת״י 5568 ברמה AA', 'IS 5568, level AA')}</p>
-  <h1 id="a11y-page-title" class="text-headline-lg md:text-display text-on-surface mb-space-md">${tr('הצהרת נגישות', 'Accessibility statement')}</h1>
+  <p class="chip bg-surface-container-high text-secondary !px-space-md mb-space-sm w-fit">${ic('accessibility_new', '!text-[1.125rem]')}${tr('ת״י 5568 ברמה AA', 'IS 5568, level AA', 'IS 5568, уровень AA')}</p>
+  <h1 id="a11y-page-title" class="text-headline-lg md:text-display text-on-surface mb-space-md">${tr('הצהרת נגישות', 'Accessibility statement', 'Заявление о доступности')}</h1>
   <div class="prose-cd">
-    ${tr(hebrew(), english())}
+    ${tr(hebrew(), english(), russian())}
     ${contactList()}
-    <p class="text-label-sm">${tr('עדכון אחרון של ההצהרה', 'Statement last updated')}: ${esc(ACCESSIBILITY.updated)}</p>
+    <p class="text-label-sm">${tr('עדכון אחרון של ההצהרה', 'Statement last updated', 'Последнее обновление заявления')}: ${esc(ACCESSIBILITY.updated)}</p>
   </div>
 </article>`,
 };

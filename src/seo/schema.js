@@ -14,7 +14,7 @@ const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 const url = (id) => absoluteUrl(SITE.siteUrl, id, getLang());
 const asset = (path) => SITE.siteUrl + path;
 const BUSINESS_ID = () => `${SITE.siteUrl}#business`;
-const inLanguage = () => tr('he-IL', 'en');
+const inLanguage = () => tr('he-IL', 'en', 'ru');
 
 export function businessSchema() {
   return {
@@ -33,7 +33,7 @@ export function businessSchema() {
     ...(BUSINESS.email ? { email: BUSINESS.email } : {}),
     address: { '@type': 'PostalAddress', addressLocality: loc(BUSINESS.city), addressCountry: 'IL' },
     areaServed: locList(DELIVERY.areas).map((name) => ({ '@type': 'City', name })),
-    servesCuisine: tr(['קינוחים', 'סינבונים', 'מאפים'], ['Desserts', 'Cinnamon rolls', 'Pastries']),
+    servesCuisine: tr(['קינוחים', 'סינבונים', 'מאפים'], ['Desserts', 'Cinnamon rolls', 'Pastries'], ['Десерты', 'Синнабоны', 'Выпечка']),
     priceRange: '₪₪',
     currenciesAccepted: 'ILS',
     paymentAccepted: locList(ORDERING.payments).join(', '),
@@ -62,7 +62,7 @@ export function breadcrumbSchema(page) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: tr('דף הבית', 'Home'), item: url('home') },
+      { '@type': 'ListItem', position: 1, name: tr('דף הבית', 'Home', 'Главная'), item: url('home') },
       { '@type': 'ListItem', position: 2, name: val(page.breadcrumb), item: url(page.id) },
     ],
   };
@@ -72,7 +72,7 @@ export function menuSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Menu',
-    name: tr(`התפריט של ${BUSINESS.name}`, `${BUSINESS.name} menu`),
+    name: tr(`התפריט של ${BUSINESS.name}`, `${BUSINESS.name} menu`, `Меню ${BUSINESS.name}`),
     url: url('menu'),
     inLanguage: inLanguage(),
     hasMenuSection: CATEGORIES.filter((c) => c.id !== 'all').map((c) => ({

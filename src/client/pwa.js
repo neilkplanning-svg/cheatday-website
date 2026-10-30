@@ -22,5 +22,5 @@ export function initPwa() {
 
 export function install() {
   if (installEvent) { installEvent.prompt(); installEvent = null; return; }
-  toast(tr('באייפון: כפתור השיתוף ← ״הוספה למסך הבית״', 'On iPhone: Share → “Add to Home Screen”'), 'ios_share');
+  toast(tr('באייפון: כפתור השיתוף ← ״הוספה למסך הבית״', 'On iPhone: Share → “Add to Home Screen”', 'На iPhone: «Поделиться» → «На экран „Домой“»'), 'ios_share');
 }

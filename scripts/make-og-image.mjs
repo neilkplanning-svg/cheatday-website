@@ -26,7 +26,7 @@ const html = `<!doctype html><html lang="he" dir="rtl"><head><meta charset="utf-
 </style></head><body>
 <div class="blob" style="width:520px;height:520px;background:#ffd9e0;top:-160px;left:-120px"></div>
 <div class="blob" style="width:420px;height:420px;background:#ffdbc9;bottom:-180px;right:300px"></div>
-<div style="position:relative;flex:1"><h1 lang="en">${BUSINESS.name}</h1><p>${BUSINESS.kind}<br>נאפים לפי הזמנה ב${BUSINESS.city}</p><span class="pill">${BUSINESS.tagline} 🧁</span></div>
+<div style="position:relative;flex:1"><h1 lang="en">${BUSINESS.name}</h1><p>${BUSINESS.kind.he}<br>נאפים לפי הזמנה ב${BUSINESS.city.he}</p><span class="pill">${BUSINESS.tagline.he} 🧁</span></div>
 <img src="data:image/png;base64,${logo}" alt="">
 </body></html>`;
 

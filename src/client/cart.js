@@ -1,7 +1,7 @@
 /** Cart UI: panels, badges, mobile bar, add-to-cart feedback and the menu filter */
 import { findItem, PRODUCTS, CATEGORIES } from '../data/index.js';
 import { nis } from '../lib/format.js';
-import { tr, loc } from '../lib/i18n.js';
+import { tr, loc, ruPlural } from '../lib/i18n.js';
 import { cartPanel } from '../components/cart-panel.js';
 import { filterPills } from '../components/ui.js';
 import { state, totals, addItem, setQty, clearCart, setMode, setPromo } from './state.js';
@@ -23,7 +23,7 @@ export function renderCart() {
   });
   $$('[data-cart-count]').forEach((el) => { el.textContent = t.count; el.hidden = !t.count; });
   $$('[data-cart-total]').forEach((el) => { el.textContent = nis(t.total); });
-  $$('.site-header [data-act="cart"]').forEach((b) => b.setAttribute('aria-label', t.count ? tr(`סל קניות, ${t.count} פריטים, ${nis(t.total)}`, `Cart, ${t.count} ${t.count === 1 ? 'item' : 'items'}, ${nis(t.total)}`) : tr('סל קניות ריק', 'Cart is empty')));
+  $$('.site-header [data-act="cart"]').forEach((b) => b.setAttribute('aria-label', t.count ? tr(`סל קניות, ${t.count} פריטים, ${nis(t.total)}`, `Cart, ${t.count} ${t.count === 1 ? 'item' : 'items'}, ${nis(t.total)}`, `Корзина: ${t.count} ${ruPlural(t.count, 'товар', 'товара', 'товаров')}, ${nis(t.total)}`) : tr('סל קניות ריק', 'Cart is empty', 'Корзина пуста')));
   const bar = $('[data-cart-bar]');
   if (bar) bar.hidden = !t.count;
 }
@@ -38,12 +38,12 @@ export function onAdd(el) {
   if (qtyEl) qtyEl.textContent = '1';
   renderCart();
   const name = loc(findItem(id).name);
-  toast(tr(`${qty > 1 ? `${qty} × ` : ''}${name} נוסף לסל`, `${qty > 1 ? `${qty} × ` : ''}${name} added to cart`));
+  toast(tr(`${qty > 1 ? `${qty} × ` : ''}${name} נוסף לסל`, `${qty > 1 ? `${qty} × ` : ''}${name} added to cart`, `Добавлено в корзину: ${qty > 1 ? `${qty} × ` : ''}${name}`));
   $$('[data-cart-count]').forEach((b) => { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); });
   if (!el.dataset.fixed) {
     const label = el.querySelector('span:last-child');
     const original = label ? label.textContent : '';
-    if (label) label.textContent = tr('נוסף לסל', 'Added');
+    if (label) label.textContent = tr('נוסף לסל', 'Added', 'Добавлено');
     el.classList.replace('bg-primary', 'bg-secondary');
     setTimeout(() => { if (label) label.textContent = original; el.classList.replace('bg-secondary', 'bg-primary'); }, 1400);
   }
@@ -60,12 +60,12 @@ export function onQty(el) {
   const next = line.qty + Number(el.dataset.d);
   setQty(el.dataset.id, next);
   renderCart();
-  if (next <= 0) toast(tr(`${loc(findItem(el.dataset.id).name)} הוסר מהסל`, `${loc(findItem(el.dataset.id).name)} removed from cart`), 'delete');
+  if (next <= 0) toast(tr(`${loc(findItem(el.dataset.id).name)} הוסר מהסל`, `${loc(findItem(el.dataset.id).name)} removed from cart`, `Удалено из корзины: ${loc(findItem(el.dataset.id).name)}`), 'delete');
 }
 
-export function onClear() { clearCart(); renderCart(); toast(tr('הסל רוקן', 'Cart emptied'), 'delete_sweep'); }
+export function onClear() { clearCart(); renderCart(); toast(tr('הסל רוקן', 'Cart emptied', 'Корзина очищена'), 'delete_sweep'); }
 export function onMode(el) { setMode(el.dataset.mode); renderCart(); }
-export function onUnpromo() { setPromo(null); renderCart(); toast(tr('קוד ההנחה הוסר', 'Discount code removed'), 'sell'); }
+export function onUnpromo() { setPromo(null); renderCart(); toast(tr('קוד ההנחה הוסר', 'Discount code removed', 'Промокод удалён'), 'sell'); }
 
 export function onCartButton() {
   const drawer = $('[data-layer="cart"]');
@@ -89,10 +89,10 @@ export function onFilter(el) {
   const label = loc(CATEGORIES.find((c) => c.id === cat).label);
   if (count) {
     count.textContent = cat === 'all'
-      ? tr(`${PRODUCTS.length} מוצרים ומארזים`, `${PRODUCTS.length} products and boxes`)
-      : tr(`${shown} מוצרים: ${label}`, `${shown} products: ${label}`);
+      ? tr(`${PRODUCTS.length} מוצרים ומארזים`, `${PRODUCTS.length} products and boxes`, `Товаров и наборов: ${PRODUCTS.length}`)
+      : tr(`${shown} מוצרים: ${label}`, `${shown} products: ${label}`, `${label}: ${shown}`);
   }
-  toast(cat === 'all' ? tr(`מוצגים ${shown} מוצרים`, `Showing ${shown} products`) : tr(`מוצגים ${shown} מוצרים בקטגוריה ${label}`, `Showing ${shown} products in ${label}`), 'filter_list');
+  toast(cat === 'all' ? tr(`מוצגים ${shown} מוצרים`, `Showing ${shown} products`, `Показано товаров: ${shown}`) : tr(`מוצגים ${shown} מוצרים בקטגוריה ${label}`, `Showing ${shown} products in ${label}`, `Категория «${label}», товаров: ${shown}`), 'filter_list');
   $(`[data-filters] [data-cat="${cat}"]`)?.focus();
 }
 

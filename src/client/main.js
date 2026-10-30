@@ -2,7 +2,7 @@
  * Browser entry point. Pages are static HTML; this file wires the interactive parts
  * through event delegation: every control declares data-act="<action>".
  */
-import { $ } from './dom.js';
+import { $, $$ } from './dom.js';
 import { renderCart, onAdd, onStep, onQty, onClear, onMode, onUnpromo, onCartButton, onFilter } from './cart.js';
 import { openCheckout, closeCheckout, submitCheckout, onCheckoutChange, copyOrder, afterSend, finishOrder } from './checkout.js';
 import { submitClub, submitPromo, submitContact, initClub } from './forms.js';
@@ -70,6 +70,15 @@ document.addEventListener('keydown', (e) => {
     else if (modal.matches('[data-a11y]')) closeA11y();
     else closeLayers();
   } else if (e.key === 'Tab') trapFocus(e, modal);
+});
+
+/* header language menu (<details>): close on a click outside it or on Esc */
+document.addEventListener('click', (e) => {
+  $$('details[data-lang-menu][open]').forEach((d) => { if (!d.contains(e.target)) d.open = false; });
+});
+document.addEventListener('keydown', (e) => {
+  const menu = e.key === 'Escape' && e.target.closest && e.target.closest('details[data-lang-menu][open]');
+  if (menu) { menu.open = false; menu.querySelector('summary').focus(); }
 });
 
 /* the "skip to content" link: move focus, not only scroll */

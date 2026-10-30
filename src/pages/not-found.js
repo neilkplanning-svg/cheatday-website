@@ -1,6 +1,6 @@
 /**
  * 404 page (GitHub Pages serves 404.html for unknown addresses at any depth, so the build gives it a <base>).
- * Built once, in Hebrew, with a short English part.
+ * Built once, in Hebrew, with short English and Russian parts.
  */
 import { BUSINESS } from '../data/index.js';
 import { ic } from '../lib/html.js';
@@ -11,7 +11,7 @@ export const page = {
   id: 'notFound',
   noindex: true,
   langs: ['he'],
-  title: () => `העמוד לא נמצא | Page not found | ${BUSINESS.name}`,
+  title: () => `העמוד לא נמצא | Page not found | Страница не найдена | ${BUSINESS.name}`,
   description: () => 'העמוד שחיפשתם לא קיים. חזרו לדף הבית או לתפריט.',
   render: () => `
 <section class="wrap gutter-x py-space-xl text-center flex flex-col items-center gap-space-md" aria-labelledby="nf-title">
@@ -25,6 +25,10 @@ export const page = {
   <div lang="en" dir="ltr" class="mt-space-md pt-space-md border-t border-surface-container flex flex-col items-center gap-space-sm">
     <h2 class="text-headline-sm text-on-surface">Oops, this page has been eaten</h2>
     <a href="en/" class="text-label-lg text-primary underline min-h-[2.75rem] inline-flex items-center">Go to the English home page</a>
+  </div>
+  <div lang="ru" dir="ltr" class="flex flex-col items-center gap-space-sm">
+    <h2 class="text-headline-sm text-on-surface">Ой, эту страницу уже съели</h2>
+    <a href="ru/" class="text-label-lg text-primary underline min-h-[2.75rem] inline-flex items-center">На главную страницу на русском</a>
   </div>
 </section>`,
 };
