@@ -1,5 +1,5 @@
 /** Cart contents, totals and checkout button – rendered in the browser from the cart state */
-import { ADDONS, CLUB, DELIVERY } from '../data/index.js';
+import { ADDONS, CLUB, DELIVERY, ORDERING } from '../data/index.js';
 import { esc, ic, each } from '../lib/html.js';
 import { tr, loc, ruPlural } from '../lib/i18n.js';
 import { nis } from '../lib/format.js';
@@ -79,6 +79,10 @@ export function cartPanel(s, t, where) {
       <div class="pt-space-xs flex justify-between text-headline-sm text-on-surface"><dt>${tr('סה״כ', 'Total', 'Итого')}</dt><dd class="text-primary tabular-nums">${nis(t.total)}</dd></div>
     </dl>
     ${showProgress ? freeDeliveryProgress(t) : ''}
+    ${t.minLeft ? `<p class="flex items-start gap-space-xs p-space-sm rounded bg-tertiary-fixed text-on-tertiary-fixed text-label-sm">${ic('info', '!text-[1.125rem]')}<span>${tr(
+      `מינימום הזמנה ${nis(ORDERING.minOrder)}. חסרים עוד ${nis(t.minLeft)}`,
+      `Minimum order ${nis(ORDERING.minOrder)}. Add ${nis(t.minLeft)} more`,
+      `Минимальный заказ — ${nis(ORDERING.minOrder)}. Добавьте ещё на ${nis(t.minLeft)}`)}</span></p>` : ''}
     <button type="button" data-act="checkout" class="btn-pop w-full min-h-[3.25rem] px-space-lg bg-primary text-on-primary text-headline-sm rounded-full shadow-pop-md flex items-center justify-center gap-space-sm">${tr('המשך להזמנה', 'Continue to order', 'Перейти к оформлению')} ${ic('arrow_back', 'fwd')}</button>
     <p class="flex items-center justify-center gap-space-md text-on-surface-variant text-label-sm">
       <span class="flex items-center gap-1">${ic('chat', 'text-tertiary !text-[1rem]')}${tr('אישור מהיר בוואטסאפ', 'Quick WhatsApp confirmation', 'Быстрое подтверждение в WhatsApp')}</span>

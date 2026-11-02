@@ -2,14 +2,13 @@
  * Menu: categories, products and side add-ons. Text values are translated: { he, en, ru }.
  * `art` draws a temporary illustration. When a real photo exists, add
  * `image: 'assets/img/<file>.webp'` and `imageAlt: { he, en, ru }` to the product.
- * Prices other than the classic roll and the classic pair are still samples (TODO).
+ * Confirmed prices: classic roll, classic pair and vegan roll. The others are still samples (TODO).
  */
 export const CATEGORIES = [
   { id: 'all', icon: 'auto_awesome', label: { he: 'הכל', en: 'All', ru: 'Все' } },
   { id: 'classic', icon: 'bakery_dining', label: { he: 'סינבונים קלאסיים', en: 'Classic rolls', ru: 'Классические синнабоны' } },
   { id: 'decadent', icon: 'favorite', label: { he: 'מהדורות מושחתות', en: 'Indulgent editions', ru: 'Особые выпуски' } },
-  { id: 'boxes', icon: 'inventory_2', label: { he: 'מארזים ומגשי אירוח', en: 'Boxes & party trays', ru: 'Наборы и подносы' } },
-  { id: 'more', icon: 'cookie', label: { he: 'קינוחים נוספים', en: 'More treats', ru: 'Другие сладости' } },
+  { id: 'boxes', icon: 'inventory_2', label: { he: 'מארזים', en: 'Boxes', ru: 'Наборы' } },
 ];
 
 export const PRODUCTS = [
@@ -74,19 +73,7 @@ export const PRODUCTS = [
     art: { kind: 'roll', glaze: 'lotus', topping: 'crumbs', drizzle: 'cream' },
   },
   {
-    id: 'strawberry', category: 'decadent', price: 33,
-    name: { he: 'תותים ושמנת חמוצה', en: 'Strawberries & sour cream', ru: 'Клубника и сметана' },
-    desc: {
-      he: 'קולי תותים ביתי, קרם שמנת חמוצה מאוזן ופרוסות תות טריות מעל הרול החם.',
-      en: 'Homemade strawberry coulis, a balanced sour-cream frosting and fresh strawberry slices on a warm roll.',
-      ru: 'Домашний клубничный кули, сбалансированный крем на сметане и ломтики свежей клубники на тёплом синнабоне.',
-    },
-    tags: [{ he: 'עונתי', en: 'Seasonal', ru: 'Сезонный' }, { he: 'קולי תות', en: 'Strawberry coulis', ru: 'Клубничный кули' }],
-    badge: { icon: 'eco', tone: 'primary', text: { he: 'מהדורה מוגבלת', en: 'Limited edition', ru: 'Ограниченный выпуск' } },
-    art: { kind: 'roll', glaze: 'pink', topping: 'strawberry' },
-  },
-  {
-    id: 'vegan', category: 'classic', price: 30,
+    id: 'vegan', category: 'classic', price: 27,
     name: { he: 'סינבון טבעוני', en: 'Vegan cinnamon roll', ru: 'Веганский синнабон' },
     desc: {
       he: 'בצק על בסיס שמן קוקוס, מילוי קינמון וסוכר חום וציפוי מייפל־וניל. בלי חלב ובלי ביצים.',
@@ -108,42 +95,6 @@ export const PRODUCTS = [
     tags: [{ he: 'מומלץ ל-6–8 אנשים', en: 'Serves 6–8', ru: 'На 6–8 человек' }, { he: 'כולל כרטיס ברכה', en: 'Greeting card included', ru: 'С открыткой' }],
     badge: { icon: 'savings', tone: 'brown', text: { he: 'משתלם', en: 'Best value', ru: 'Выгодно' } },
     art: { kind: 'box6' },
-  },
-  {
-    id: 'tray', category: 'boxes', price: 180, wide: true,
-    name: { he: 'מגש מיני סינבונים לאירוח (20 יח׳)', en: 'Mini cinnamon roll party tray (20 pcs)', ru: 'Поднос мини-синнабонов для гостей (20 шт.)' },
-    desc: {
-      he: 'מיני רולים בארבעה טעמים, מסודרים על מגש הגשה. מושלם לימי הולדת, בריתות וישיבות צוות.',
-      en: 'Mini rolls in four flavours, arranged on a serving tray. Perfect for birthdays, family events and office meetings.',
-      ru: 'Мини-синнабоны четырёх вкусов на сервировочном подносе. Идеально для дней рождения, семейных праздников и встреч в офисе.',
-    },
-    tags: [{ he: '20 מיני רולים', en: '20 mini rolls', ru: '20 мини-синнабонов' }, { he: 'להזמין 72 שעות מראש', en: 'Order 72 hours ahead', ru: 'Заказ за 72 часа' }],
-    badge: { icon: 'celebration', tone: 'primary', text: { he: 'לאירועים', en: 'For events', ru: 'Для мероприятий' } },
-    art: { kind: 'tray' },
-  },
-  {
-    id: 'pullapart', category: 'more', price: 120,
-    name: { he: 'עוגת סינבון נמשכת', en: 'Pull-apart cinnamon roll cake', ru: 'Отрывной пирог из синнабонов' },
-    desc: {
-      he: 'תבנית עגולה של 7 רולים מחוברים שנמשכים בחום, עם קערית גלייז גבינה בצד. מרכז השולחן.',
-      en: 'A round pan of 7 connected rolls you pull apart warm, with a bowl of cream-cheese glaze on the side. The centre of the table.',
-      ru: 'Круглая форма из 7 соединённых синнабонов, которые отрывают тёплыми, с пиалой сырной глазури. Центр стола.',
-    },
-    tags: [{ he: '8–10 מנות', en: '8–10 servings', ru: '8–10 порций' }, { he: 'גלייז בצד', en: 'Glaze on the side', ru: 'Глазурь отдельно' }],
-    badge: { icon: 'cake', tone: 'soft', text: { he: 'לשולחן שישי', en: 'Friday table', ru: 'Для пятничного стола' } },
-    art: { kind: 'cluster' },
-  },
-  {
-    id: 'cookies', category: 'more', price: 36,
-    name: { he: 'קוקיז סינבון (6 יח׳)', en: 'Cinnamon roll cookies (6 pcs)', ru: 'Печенье-синнабон (6 шт.)' },
-    desc: {
-      he: 'עוגיות חמאה רכות עם ספירלת קינמון וזילוף גלייז וניל. טעם של סינבון בביס אחד.',
-      en: 'Soft butter cookies with a cinnamon swirl and vanilla glaze drizzle. A cinnamon roll in one bite.',
-      ru: 'Мягкое сливочное печенье со спиралью корицы и ванильной глазурью. Вкус синнабона в одном укусе.',
-    },
-    tags: [{ he: '6 עוגיות', en: '6 cookies', ru: '6 штук' }, { he: 'מחזיק 5 ימים', en: 'Keeps 5 days', ru: 'Хранится 5 дней' }],
-    badge: { icon: 'redeem', tone: 'brown', text: { he: 'מתנה קטנה', en: 'Little gift', ru: 'Маленький подарок' } },
-    art: { kind: 'cookies' },
   },
 ];
 

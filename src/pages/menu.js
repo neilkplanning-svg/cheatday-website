@@ -11,8 +11,8 @@ export const page = {
   breadcrumb: () => tr('תפריט והזמנות', 'Menu & orders', 'Меню и заказы'),
   title: () => tr(`תפריט סינבונים ומארזים | ${BUSINESS.name} ${loc(BUSINESS.city)}`, `Cinnamon roll menu & boxes | ${BUSINESS.name} ${loc(BUSINESS.city)}`, `Меню синнабонов и наборов | ${BUSINESS.name}, ${loc(BUSINESS.city)}`),
   description: () => tr(
-    `התפריט המלא של ${BUSINESS.name}: סינבון קלאסי ב-${nis(PRODUCTS[0].price)}, מארז זוג, מהדורות מושחתות, מארזי שישייה ומגשי אירוח. מחירים, הזמנה אונליין ומשלוח ל${loc(BUSINESS.city)} והסביבה.`,
-    `The full ${BUSINESS.name} menu: classic cinnamon roll ${nis(PRODUCTS[0].price)}, pair box, indulgent editions, boxes of six and party trays. Prices, online ordering and delivery around ${loc(BUSINESS.city)}.`, `Полное меню ${BUSINESS.name}: классический синнабон ${nis(PRODUCTS[0].price)}, набор из двух, особые выпуски, наборы из шести и подносы для гостей. Цены, онлайн-заказ и доставка (${loc(BUSINESS.city)} и окрестности).`),
+    `התפריט המלא של ${BUSINESS.name}: סינבון קלאסי ב-${nis(PRODUCTS[0].price)}, מארז זוג, מהדורות מושחתות, סינבון טבעוני ומארזי שישייה. מחירים, הזמנה אונליין ומשלוח ל${loc(BUSINESS.city)} והסביבה.`,
+    `The full ${BUSINESS.name} menu: classic cinnamon roll ${nis(PRODUCTS[0].price)}, pair box, indulgent editions, a vegan roll and boxes of six. Prices, online ordering and delivery around ${loc(BUSINESS.city)}.`, `Полное меню ${BUSINESS.name}: классический синнабон ${nis(PRODUCTS[0].price)}, набор из двух, особые выпуски, веганский синнабон и наборы из шести. Цены, онлайн-заказ и доставка (${loc(BUSINESS.city)} и окрестности).`),
   render: () => `
 <div class="relative overflow-hidden">
   <div class="absolute -top-24 right-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
@@ -22,7 +22,7 @@ export const page = {
         <span class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-pop shrink-0" aria-hidden="true">${ic('oven_gen')}</span>
         <div class="min-w-0">
           <p class="flex flex-wrap items-center gap-x-space-xs text-label-md text-primary"><span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse" aria-hidden="true"></span>${tr('מזמינים עכשיו, אוספים כבר ב', 'Order now, pick up as early as ', 'Закажите сейчас. Ближайший самовывоз: ')}<span data-dyn="next-date">${tr('יום ההזמנה הקרוב', 'the next order day', 'ближайший день заказа')}</span></p>
-          <p class="text-body-sm text-on-surface-variant">${esc(loc(ORDERING.leadNote))}. ${esc(loc(ORDERING.rushNote))}.</p>
+          <p class="text-body-sm text-on-surface-variant">${esc(loc(ORDERING.leadNote))}. ${esc(loc(ORDERING.rushNote))}. ${tr(`מינימום הזמנה ${nis(ORDERING.minOrder)}.`, `Minimum order ${nis(ORDERING.minOrder)}.`, `Минимальный заказ — ${nis(ORDERING.minOrder)}.`)}</p>
         </div>
       </div>
       <ul class="flex flex-wrap items-center gap-space-sm w-full md:w-auto md:justify-end">

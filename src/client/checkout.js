@@ -56,12 +56,22 @@ function formHtml() {
       <textarea class="field resize-y" id="co-notes" name="notes" rows="2" placeholder="${tr('ברכה למארז, גלייז בצד, אלרגיות...', 'Greeting for the box, glaze on the side, allergies...', 'Поздравление к набору, глазурь отдельно, аллергии...')}">${esc(state.notes)}</textarea></div>
     <p class="p-space-sm rounded bg-surface-container-low flex items-center justify-between text-headline-sm"><span>${tr('סה״כ לתשלום', 'Total to pay', 'Итого к оплате')}</span><span class="text-primary tabular-nums" data-co-total>${nis(totals().total)}</span></p>
     <button type="submit" class="btn-pop w-full min-h-[3.25rem] rounded-full bg-primary text-on-primary text-headline-sm flex items-center justify-center gap-space-xs shadow-pop-md">${tr('סיכום ושליחה', 'Review & send', 'Проверить и отправить')} ${ic('arrow_back', 'fwd')}</button>
-    <p class="text-label-sm text-on-surface-variant text-center">${tr('ההזמנה נשלחת אלינו בוואטסאפ ונאשר אותה בהקדם. התשלום רק אחרי האישור.', 'Your order reaches us on WhatsApp and we will confirm it soon. You pay only after we confirm.', 'Заказ придёт к нам в WhatsApp, и мы скоро его подтвердим. Оплата только после подтверждения.')}</p>
+    <p class="text-label-sm text-on-surface-variant text-center">${tr('ההזמנה נשלחת אלינו בוואטסאפ ונאשר אותה בהקדם. התשלום רק אחרי האישור, ולאחר האישור אין ביטול.', 'Your order reaches us on WhatsApp and we will confirm it soon. You pay only after we confirm, and a confirmed order cannot be cancelled.', 'Заказ придёт к нам в WhatsApp, и мы скоро его подтвердим. Оплата только после подтверждения; подтверждённый заказ отменить нельзя.')}</p>
   </form>`;
 }
 
 export function openCheckout() {
-  if (!totals().count) { toast(tr('הסל עדיין ריק – בחרו משהו מתוק', 'Your cart is empty – pick something sweet', 'Корзина пока пуста — выберите что-нибудь сладкое'), 'cookie'); return; }
+  const t = totals();
+  if (!t.count) { toast(tr('הסל עדיין ריק – בחרו משהו מתוק', 'Your cart is empty – pick something sweet', 'Корзина пока пуста — выберите что-нибудь сладкое'), 'cookie'); return; }
+  if (t.minLeft) {
+    const msg = tr(
+      `מינימום הזמנה ${nis(ORDERING.minOrder)}. הוסיפו עוד ${nis(t.minLeft)} לסל`,
+      `The minimum order is ${nis(ORDERING.minOrder)}. Add ${nis(t.minLeft)} more to your cart`,
+      `Минимальный заказ — ${nis(ORDERING.minOrder)}. Добавьте в корзину ещё на ${nis(t.minLeft)}`);
+    toast(msg, 'info');
+    announce(msg);
+    return;
+  }
   returnFocus = document.activeElement && document.activeElement.closest('[data-layer]') ? $('.site-header [data-act="cart"]') : document.activeElement;
   closeLayers(false);
   body().innerHTML = formHtml();

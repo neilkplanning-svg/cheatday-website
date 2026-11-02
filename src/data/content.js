@@ -1,10 +1,10 @@
 /**
  * Page copy that is not menu or contact data: the "our secret" page, reviews and FAQ.
  * Translated values: { he, en, ru }. FAQ answers may use {city}, {areas}, {fee}, {freeAbove},
- * {cancelHours} placeholders.
+ * {minOrder} placeholders.
  */
 
-/** TODO: confirm which ingredients are really used, and their brands */
+/** Confirmed by the owner (questionnaire): real butter, Ceylon cinnamon, real vanilla, Philadelphia cream cheese, slow-rise dough, no preservatives */
 export const INGREDIENTS = [
   { id: 'butter', art: 'butter', icon: 'water_drop',
     badge: { he: 'חמאה אמיתית', en: 'Real butter', ru: 'Настоящее масло' }, origin: { he: 'בלי מרגרינה', en: 'No margarine', ru: 'Без маргарина' },
@@ -19,11 +19,11 @@ export const INGREDIENTS = [
       en: 'Sweet, delicate and deep, without the bitterness of industrial cassia. It is what fills the house with that smell.',
       ru: 'Сладкая, нежная и глубокая, без горечи промышленной кассии. Именно она наполняет дом этим ароматом.' } },
   { id: 'flour', art: 'flour', icon: 'grain',
-    badge: { he: 'ניפוי כפול', en: 'Sifted twice', ru: 'Двойное просеивание' }, origin: { he: 'בצק עננים', en: 'Cloud dough', ru: 'Тесто-облако' },
-    title: { he: 'קמח מנופה ותפיחה איטית', en: 'Sifted flour, slow rise', ru: 'Просеянная мука и медленная расстойка' },
-    text: { he: 'קמח לחם איכותי שמנופה פעמיים ובצק שמקבל זמן לתפוח. התוצאה: רול אוורירי שמחזיק את המילוי.',
-      en: 'Quality bread flour sifted twice and a dough that gets time to rise. The result: an airy roll that holds its filling.',
-      ru: 'Хорошая хлебопекарная мука, просеянная дважды, и тесто, которому дают время подойти. Результат — воздушная булочка, которая держит начинку.' } },
+    badge: { he: 'תפיחה איטית', en: 'Slow rise', ru: 'Медленная расстойка' }, origin: { he: 'בצק עננים', en: 'Cloud dough', ru: 'Тесто-облако' },
+    title: { he: 'בצק שמרים בתפיחה איטית', en: 'Slow-rise yeast dough', ru: 'Дрожжевое тесто медленной расстойки' },
+    text: { he: 'בצק שמרים שמקבל את כל הזמן שהוא צריך כדי לתפוח בנחת. התוצאה: רול אוורירי ורך שמחזיק את המילוי.',
+      en: 'A yeast dough that gets all the time it needs to rise slowly. The result: a soft, airy roll that holds its filling.',
+      ru: 'Дрожжевое тесто, которому дают столько времени, сколько нужно, чтобы спокойно подойти. Результат — мягкая воздушная булочка, которая держит начинку.' } },
   { id: 'vanilla', art: 'vanilla', icon: 'local_florist', wide: true,
     badge: { he: 'וניל אמיתי', en: 'Real vanilla', ru: 'Настоящая ваниль' }, origin: { he: 'בגלייז', en: 'In the glaze', ru: 'В глазури' },
     title: { he: 'וניל אמיתי בגלייז', en: 'Real vanilla in the glaze', ru: 'Настоящая ваниль в глазури' },
@@ -31,12 +31,12 @@ export const INGREDIENTS = [
       en: 'Real vanilla seeds folded into the cream-cheese glaze, no artificial extracts. You can see the black specks in every topping.',
       ru: 'Зёрнышки настоящей ванили в глазури из сливочного сыра, без искусственных ароматизаторов. Чёрные точки видны в каждой глазури.' },
     check: { he: 'רואים את נקודות הווניל בכל ציפוי', en: 'Vanilla specks in every glaze', ru: 'Точки ванили в каждой глазури' } },
-  { id: 'chocolate', art: 'chocolate', icon: 'cookie',
-    badge: { he: 'שוקולד בלגי', en: 'Belgian chocolate', ru: 'Бельгийский шоколад' }, origin: { he: 'למהדורות המושחתות', en: 'For the indulgent editions', ru: 'Для особых выпусков' },
-    title: { he: 'שוקולד בלגי', en: 'Belgian chocolate', ru: 'Бельгийский шоколад' },
-    text: { he: 'שוקולד עשיר ומאוזן שנמס לתוך המילויים והטופינגים, ויוצר ניגוד מושלם לקינמון המתוק.',
-      en: 'Rich, balanced chocolate that melts into the fillings and toppings, a perfect contrast to the sweet cinnamon.',
-      ru: 'Насыщенный, сбалансированный шоколад, который тает в начинке и топпингах и идеально оттеняет сладкую корицу.' } },
+  { id: 'cheese', art: 'cheese', icon: 'kitchen',
+    badge: { he: 'פילדלפיה', en: 'Philadelphia', ru: 'Philadelphia' }, origin: { he: 'הגבינה שבגלייז', en: 'The cheese in the glaze', ru: 'Сыр в глазури' },
+    title: { he: 'גבינת שמנת פילדלפיה', en: 'Philadelphia cream cheese', ru: 'Сливочный сыр Philadelphia' },
+    text: { he: 'הגלייז שלנו מוכן מגבינת שמנת פילדלפיה אמיתית: קרמי, עשיר ועם חמיצות עדינה שמאזנת את המתיקות של הקינמון.',
+      en: 'Our glaze is made with real Philadelphia cream cheese: creamy, rich and with a gentle tang that balances the sweet cinnamon.',
+      ru: 'Наша глазурь готовится на настоящем сливочном сыре Philadelphia: кремовая, насыщенная, с лёгкой кислинкой, которая уравновешивает сладость корицы.' } },
 ];
 
 /** Baking steps – also the chapters of the baking video */
@@ -76,9 +76,9 @@ export const REVIEWS = [
 
 export const FAQ = [
   { q: { he: 'איך מזמינים?', en: 'How do I order?', ru: 'Как сделать заказ?' },
-    a: { he: 'בוחרים בתפריט, מוסיפים לסל, ממלאים פרטים ושולחים את ההזמנה בוואטסאפ בלחיצה אחת. נחזור אליכם לאישור ותיאום תשלום.',
-      en: 'Pick from the menu, add to your cart, fill in your details and send the order on WhatsApp in one tap. We will get back to you to confirm and arrange payment.',
-      ru: 'Выберите в меню, добавьте в корзину, заполните данные и отправьте заказ в WhatsApp одним нажатием. Мы свяжемся с вами, чтобы подтвердить заказ и договориться об оплате.' } },
+    a: { he: 'בוחרים בתפריט, מוסיפים לסל, ממלאים פרטים ושולחים את ההזמנה בוואטסאפ בלחיצה אחת. נחזור אליכם לאישור ותיאום תשלום. מינימום הזמנה ₪{minOrder}.',
+      en: 'Pick from the menu, add to your cart, fill in your details and send the order on WhatsApp in one tap. We will get back to you to confirm and arrange payment. Minimum order ₪{minOrder}.',
+      ru: 'Выберите в меню, добавьте в корзину, заполните данные и отправьте заказ в WhatsApp одним нажатием. Мы свяжемся с вами, чтобы подтвердить заказ и договориться об оплате. Минимальный заказ — {minOrder} ₪.' } },
   { q: { he: 'כמה זמן מראש צריך להזמין?', en: 'How far ahead should I order?', ru: 'За сколько дней нужно заказывать?' },
     a: { he: 'אנחנו אופים לפי הזמנה, ולכן מזמינים לפחות יומיים מראש ולא באותו יום. צריכים מוקדם יותר? כתבו לנו בוואטסאפ ונבדוק אם אפשר להקדים. לאירועים מזמינים לפחות 72 שעות מראש.',
       en: 'We bake to order, so orders are placed at least two days ahead, never same-day. Need it sooner? Message us on WhatsApp and we will check if we can fit you in. Events need at least 72 hours.',
@@ -92,15 +92,15 @@ export const FAQ = [
       en: '10–15 seconds in the microwave, or 5 minutes in an oven preheated to 160°C. The glaze melts just right.',
       ru: '10–15 секунд в микроволновке или 5 минут в духовке, разогретой до 160 °C. Глазурь растает как надо.' } },
   { q: { he: 'מה עם אלרגנים?', en: 'What about allergens?', ru: 'А что с аллергенами?' },
-    a: { he: 'המוצרים מכילים גלוטן, חלב וביצים, ועשויים להכיל אגוזים ושומשום. הרול הטבעוני ללא חלב וביצים, אך נאפה באותו מטבח.',
-      en: 'Our products contain gluten, milk and eggs, and may contain nuts and sesame. The vegan roll has no dairy or eggs but is baked in the same kitchen.',
-      ru: 'Наша продукция содержит глютен, молоко и яйца и может содержать орехи и кунжут. Веганский синнабон без молочных продуктов и яиц, но печётся на той же кухне.' } },
+    a: { he: 'המוצרים מכילים גלוטן, חלב וביצים, ועשויים להכיל אגוזים, בוטנים, שומשום וסויה. הרול הטבעוני ללא חלב וביצים, אך נאפה באותו מטבח.',
+      en: 'Our products contain gluten, milk and eggs, and may contain nuts, peanuts, sesame and soy. The vegan roll has no dairy or eggs but is baked in the same kitchen.',
+      ru: 'Наша продукция содержит глютен, молоко и яйца и может содержать орехи, арахис, кунжут и сою. Веганский синнабон без молочных продуктов и яиц, но печётся на той же кухне.' } },
   { q: { he: 'אפשר לבטל או לשנות הזמנה?', en: 'Can I cancel or change an order?', ru: 'Можно отменить или изменить заказ?' },
-    a: { he: 'כן, ללא עלות עד {cancelHours} שעות לפני מועד האיסוף. אחרי זה הבצק כבר בהכנה.',
-      en: 'Yes, free of charge up to {cancelHours} hours before pickup. After that the dough is already being prepared.',
-      ru: 'Да, бесплатно — не позднее чем за {cancelHours} ч. до самовывоза. После этого тесто уже в работе.' } },
+    a: { he: 'אחרי שאישרנו את ההזמנה אי אפשר לבטל אותה, כי אנחנו קונים חומרי גלם ואופים במיוחד בשבילכם. צריכים לשנות שעה או פרט קטן? כתבו לנו ונשתדל לעזור.',
+      en: 'Once we confirm an order it cannot be cancelled, because we buy the ingredients and bake especially for you. Need to change the time or a small detail? Message us and we will do our best.',
+      ru: 'После подтверждения заказ отменить нельзя: мы закупаем продукты и печём специально для вас. Нужно изменить время или мелкую деталь? Напишите нам, и мы постараемся помочь.' } },
   { q: { he: 'אפשר להזמין לאירוע?', en: 'Can I order for an event?', ru: 'Можно заказать на мероприятие?' },
-    a: { he: 'בטח. מגשי מיני סינבונים, מארזים ממותגים ועמדת סינבון חם. שלחו לנו פרטים בטופס או בוואטסאפ ונבנה הצעה.',
-      en: 'Of course. Mini roll trays, branded boxes and a warm cinnamon roll station. Send us the details in the form or on WhatsApp and we will put together an offer.',
-      ru: 'Конечно. Подносы мини-синнабонов, брендированные наборы и станция горячих синнабонов. Пришлите детали через форму или в WhatsApp, и мы подготовим предложение.' } },
+    a: { he: 'בטח. מכינים מארזים בכמויות גדולות לימי הולדת, לאירועים ולמשרדים. שלחו לנו פרטים בטופס או בוואטסאפ ונבנה הצעה.',
+      en: 'Of course. We make large orders of boxes for birthdays, events and offices. Send us the details in the form or on WhatsApp and we will put together an offer.',
+      ru: 'Конечно. Готовим большие заказы наборов на дни рождения, мероприятия и в офис. Пришлите детали через форму или в WhatsApp, и мы подготовим предложение.' } },
 ];

@@ -80,6 +80,10 @@ export const page = {
     <p class="text-body-lg text-on-surface-variant max-w-2xl">${tr(
       'מהלישה הראשונה של בצק העננים, דרך ספירלת הקינמון הנדיבה ועד הגלייז החם שאי אפשר לעמוד בפניו.',
       'From the first knead of our cloud dough, through the generous cinnamon swirl, to the warm glaze nobody can resist.', 'От первого замеса теста-облака через щедрую спираль корицы до тёплой глазури, перед которой невозможно устоять.')}</p>
+    <figure class="mt-space-md flex flex-col items-center gap-space-xs">
+      <blockquote class="text-headline-md text-secondary"><p>${tr('״', '“', '«')}${esc(loc(BUSINESS.motto))}${tr('״', '”', '»')}</p></blockquote>
+      <figcaption class="text-label-md text-on-surface-variant">— ${esc(loc(BUSINESS.owner))}, ${brandName(BUSINESS.name)}</figcaption>
+    </figure>
   </div>
   <section id="video" class="wrap gutter-x pb-space-xl relative" aria-labelledby="video-title">
     <h2 id="video-title" class="sr-only">${tr('סרטון ותהליך האפייה', 'Baking video and process', 'Видео и процесс выпечки')}</h2>

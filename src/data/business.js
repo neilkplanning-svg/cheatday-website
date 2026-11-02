@@ -5,7 +5,9 @@
 export const BUSINESS = {
   name: 'CheatDay',
   nameHe: 'צ׳יט דיי',
-  owner: { he: 'אנסטסיה טורצ׳ין', en: 'Anastasia Tourchin', ru: 'Анастасия Турчин' },
+  /** First name only, as the owner asked */
+  owner: { he: 'אנסטסיה', en: 'Anastasia', ru: 'Анастасия' },
+  motto: { he: 'החשק הוא אבי ההמצאה', en: 'Craving is the mother of invention', ru: 'Желание — мать изобретательности' },
   tagline: { he: 'היום מותר הכל', en: 'Today, anything goes', ru: 'Сегодня можно всё' },
   kind: { he: 'סינבונים וקינוחים ביתיים', en: 'Homemade cinnamon rolls & desserts', ru: 'Домашние синнабоны и десерты' },
   about: {
@@ -43,8 +45,10 @@ export const ORDERING = {
     he: 'צריכים מוקדם יותר? כתבו לנו בוואטסאפ ונבדוק אם אפשר להקדים',
     en: "Need it sooner? Message us on WhatsApp and we'll check if we can fit you in", ru: 'Нужно раньше? Напишите нам в WhatsApp, и мы проверим, можно ли успеть',
   },
-  eventsNote: { he: 'להזמנות אירועים ומגשים גדולים – לפחות 72 שעות מראש', en: 'Events and large trays: at least 72 hours ahead', ru: 'Мероприятия и большие подносы — минимум за 72 часа' },
-  cancelHours: 24,
+  eventsNote: { he: 'להזמנות לאירועים ובכמויות גדולות – לפחות 72 שעות מראש', en: 'Events and large orders: at least 72 hours ahead', ru: 'Мероприятия и большие заказы — минимум за 72 часа' },
+  /** Smallest order the cart lets through to checkout, in ₪ (before the club discount) */
+  minOrder: 75,
+  /** No cancellation once the order is confirmed (see the terms page and FAQ) */
   payments: [ // TODO: confirm
     { he: 'ביט', en: 'Bit', ru: 'Bit' },
     { he: 'פייבוקס', en: 'PayBox', ru: 'PayBox' },

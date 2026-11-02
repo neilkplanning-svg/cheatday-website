@@ -1,5 +1,5 @@
 /** Cart state, persisted in the browser, and the price calculation */
-import { CLUB, DELIVERY, findItem } from '../data/index.js';
+import { CLUB, DELIVERY, ORDERING, findItem } from '../data/index.js';
 import { store, KEYS } from '../lib/storage.js';
 
 export const state = {
@@ -16,7 +16,7 @@ export function saveCart() {
   store.set(KEYS.promo, state.promo);
 }
 
-/** Lines with their product, subtotal, discount, delivery and total */
+/** Lines with their product, subtotal, discount, delivery, total, and how much is missing to the minimum order */
 export function totals() {
   const lines = state.cart.map((l) => ({ ...l, item: findItem(l.id) })).filter((l) => l.item);
   const subtotal = lines.reduce((sum, l) => sum + l.item.price * l.qty, 0);
@@ -24,7 +24,8 @@ export function totals() {
   const afterDiscount = subtotal - discount;
   const delivery = state.mode === 'delivery' && subtotal > 0 && afterDiscount < DELIVERY.freeAbove ? DELIVERY.fee : 0;
   const count = lines.reduce((sum, l) => sum + l.qty, 0);
-  return { lines, subtotal, discount, delivery, total: afterDiscount + delivery, count };
+  const minLeft = subtotal > 0 ? Math.max(0, ORDERING.minOrder - subtotal) : 0;
+  return { lines, subtotal, discount, delivery, total: afterDiscount + delivery, count, minLeft };
 }
 
 export function addItem(id, qty = 1) {

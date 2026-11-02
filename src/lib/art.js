@@ -228,7 +228,7 @@ export function hero(label) {
 /* ---------- ingredient scenes ---------- */
 export function ingredient(kind, label) {
   const W = 400, H = 260;
-  const bgs = { butter: ['#fff8e6', '#ffe7a8'], cinnamon: ['#ffeadf', '#f0bd8b'], vanilla: ['#fff6ec', '#f3dcc0'], chocolate: ['#ffe3d3', '#e2b48c'], flour: ['#fffaf5', '#f1e2d2'] };
+  const bgs = { butter: ['#fff8e6', '#ffe7a8'], cinnamon: ['#ffeadf', '#f0bd8b'], vanilla: ['#fff6ec', '#f3dcc0'], cheese: ['#f3f7fb', '#dbe6f0'], flour: ['#fffaf5', '#f1e2d2'] };
   let s = backdrop(W, H, bgs[kind] || bgs.flour, kind, kind !== 'flour');
   if (kind === 'butter') {
     s += `<path d="M70 190 L200 222 L340 178 L210 150Z" fill="#ffffff" opacity=".9"/><path d="M200 222 L210 150" stroke="#eadfcf" stroke-width="2"/>`;
@@ -244,11 +244,13 @@ export function ingredient(kind, label) {
     s += `<g fill="none" stroke-linecap="round"><path d="M60 200 C140 120 240 110 340 70" stroke="#2b160c" stroke-width="15"/><path d="M70 220 C150 150 250 150 350 110" stroke="#3a1f10" stroke-width="15"/><path d="M80 236 C170 186 260 190 340 160" stroke="#2b160c" stroke-width="15"/></g>`;
     s += `<path d="M100 214 C160 168 230 166 300 144" stroke="#120804" stroke-width="5" fill="none" stroke-dasharray="1 6" stroke-linecap="round"/>`;
     s += `<g transform="translate(300 190)">${[0, 72, 144, 216, 288].map((a) => `<ellipse rx="14" ry="30" cy="-24" fill="#fff3d6" transform="rotate(${a})"/>`).join('')}<circle r="10" fill="#f5c04a"/></g>`;
-  } else if (kind === 'chocolate') {
-    s += `<g transform="rotate(-10 200 130)"><rect x="90" y="60" width="220" height="140" rx="14" fill="#3e1c0c"/>`;
-    for (let i = 0; i < 4; i++) for (let j = 0; j < 3; j++) s += `<rect x="${102 + i * 52}" y="${72 + j * 42}" width="44" height="34" rx="6" fill="#5a2d16"/><rect x="${106 + i * 52}" y="${75 + j * 42}" width="30" height="6" rx="3" fill="#7a4428" opacity=".7"/>`;
-    s += `</g><g transform="rotate(18 320 200)"><rect x="290" y="176" width="60" height="44" rx="6" fill="#4a2412"/><rect x="296" y="182" width="48" height="10" rx="4" fill="#6b3a20"/></g>`;
-    s += `<path d="M60 210c10-8 22-8 30 0" stroke="#5a2d16" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+  } else if (kind === 'cheese') {
+    // a block of cream cheese on its foil wrapper, with a knife and a small bowl of glaze
+    s += `<path d="M60 196 L196 232 L344 186 L210 156Z" fill="#cfd6dd"/><path d="M60 196 L196 232 L196 240 L60 204Z" fill="#aab4bf"/><path d="M196 232 L344 186 L344 194 L196 240Z" fill="#b9c2cc"/>`;
+    s += `<path d="M110 132 L218 104 L300 132 L192 162Z" fill="#fffefa"/><path d="M110 132 L192 162 L192 206 L110 178Z" fill="#f4efe6"/><path d="M192 162 L300 132 L300 176 L192 206Z" fill="#e9e1d4"/>`;
+    s += `<path d="M150 128 C170 120 190 126 206 120" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round"/>`;
+    s += `<g transform="rotate(-28 250 92)"><rect x="196" y="84" width="96" height="14" rx="7" fill="#9aa5b1"/><rect x="290" y="82" width="58" height="18" rx="9" fill="#6b3a20"/><path d="M200 88 C220 78 240 80 262 86" stroke="#fffefa" stroke-width="8" stroke-linecap="round" fill="none"/></g>`;
+    s += `<ellipse cx="320" cy="222" rx="44" ry="14" fill="#e6d3bf"/><ellipse cx="320" cy="214" rx="40" ry="12" fill="#fffdf6"/><path d="M296 212 q24 -10 48 0" stroke="#f1e4d0" stroke-width="3" fill="none"/>`;
   } else if (kind === 'flour') {
     s += `<path d="M50 230 C90 120 150 90 200 90 C250 90 310 120 350 230Z" fill="#efe4d8"/><path d="M70 230 C110 140 160 110 200 110 C240 110 290 140 330 230Z" fill="#fffdf9"/>`;
     s += `<g transform="rotate(-24 290 110)"><rect x="250" y="96" width="120" height="16" rx="8" fill="#c8915a"/><ellipse cx="240" cy="104" rx="40" ry="28" fill="#d9a46b"/><ellipse cx="240" cy="100" rx="30" ry="18" fill="#fffdf9"/></g>`;

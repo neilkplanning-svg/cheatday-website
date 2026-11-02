@@ -85,8 +85,8 @@ export const page = {
       <p class="inline-flex items-center gap-space-xs px-space-md py-space-xs rounded-full bg-surface-container-high w-fit text-primary text-label-md shadow-sm">${ic('favorite', '!text-[1.125rem]')}${tr('דברו איתנו, הריח כבר באוויר', 'Talk to us, the smell is already in the air', 'Пишите нам — аромат уже в воздухе')}</p>
       <h1 id="contact-title" class="text-display-mobile md:text-display text-primary">${tr('בואו נדבר מתוק', "Let's talk sweet", 'Давайте поговорим о сладком')}</h1>
       <p class="text-body-lg text-on-surface-variant">${tr(
-        'מארז ליום הולדת, מגש לאירוע, שאלה על אלרגנים או סתם חשק? כתבו לנו ונחזור אליכם עם חיוך וגלייז.',
-        'A birthday box, a tray for an event, a question about allergens or just a craving? Write to us and we will get back to you with a smile and some glaze.', 'Набор на день рождения, поднос на мероприятие, вопрос об аллергенах или просто захотелось сладкого? Напишите нам, и мы ответим с улыбкой и глазурью.')}</p>
+        'מארז ליום הולדת, הזמנה לאירוע, שאלה על אלרגנים או סתם חשק? כתבו לנו ונחזור אליכם עם חיוך וגלייז.',
+        'A birthday box, an order for an event, a question about allergens or just a craving? Write to us and we will get back to you with a smile and some glaze.', 'Набор на день рождения, заказ на мероприятие, вопрос об аллергенах или просто захотелось сладкого? Напишите нам, и мы ответим с улыбкой и глазурью.')}</p>
       <p class="flex flex-wrap items-center gap-x-space-sm gap-y-space-xs text-body-md text-on-surface">${ic('person', 'text-primary !text-[1.25rem]')}<span>${esc(loc(BUSINESS.owner))}</span><a class="text-primary underline underline-offset-4 min-h-[2.75rem] inline-flex items-center" href="${telHref()}" dir="ltr">${esc(BUSINESS.phone)}</a></p>
     </div>
     <div class="bg-surface-container-lowest p-space-md rounded-lg shadow-md flex items-center gap-space-md max-w-sm w-full">
@@ -121,7 +121,7 @@ export const page = {
         <ul class="flex flex-col gap-space-xs text-on-surface-variant text-body-sm">
           ${each([
             tr('מוצרים חלביים, נאפים טרי לכל הזמנה', 'Dairy products, baked fresh for every order', 'Молочная продукция, печём свежей к каждому заказу'),
-            tr('מכיל גלוטן, חלב וביצים. עשוי להכיל אגוזים ושומשום', 'Contains gluten, milk and eggs. May contain nuts and sesame', 'Содержит глютен, молоко и яйца. Может содержать орехи и кунжут'),
+            tr('מכיל גלוטן, חלב וביצים. עשוי להכיל אגוזים, בוטנים, שומשום וסויה', 'Contains gluten, milk and eggs. May contain nuts, peanuts, sesame and soy', 'Содержит глютен, молоко и яйца. Может содержать орехи, арахис, кунжут и сою'),
             tr('יש לכם אלרגיה? כתבו לנו לפני ההזמנה', 'Have an allergy? Message us before you order', 'Есть аллергия? Напишите нам до заказа'),
           ], (t) => `<li class="flex items-start gap-space-xs">${ic('check_circle', 'text-primary !text-[1.125rem]')}${t}</li>`)}
         </ul>
