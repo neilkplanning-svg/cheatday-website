@@ -6,7 +6,7 @@ export const BUSINESS = {
   name: 'CheatDay',
   nameHe: 'צ׳יט דיי',
   /** First name only, as the owner asked */
-  owner: { he: 'אנסטסיה', en: 'Anastasia', ru: 'Анастасия' },
+  owner: { he: 'אנסטסיה', en: 'Anastasya', ru: 'Анастасия' },
   motto: { he: 'החשק הוא אבי ההמצאה', en: 'Craving is the mother of invention', ru: 'Желание — мать изобретательности' },
   tagline: { he: 'היום מותר הכל', en: 'Today, anything goes', ru: 'Сегодня можно всё' },
   kind: { he: 'סינבונים וקינוחים ביתיים', en: 'Homemade cinnamon rolls & desserts', ru: 'Домашние синнабоны и десерты' },
